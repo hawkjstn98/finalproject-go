@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"finalproject/main/repository/mongoConfig"
+	"github.com/hawkjstn98/FinalProjectEnv/main/repository/mongoConfig"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 )

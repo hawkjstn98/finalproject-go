@@ -1,7 +1,7 @@
 package main
 
 import (
-	"finalproject/main/controller"
+	"github.com/hawkjstn98/FinalProjectEnv/main/controller"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"net/http"

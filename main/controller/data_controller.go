@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"finalproject/main/repository"
+	"github.com/hawkjstn98/FinalProjectEnv/main/repository"
 	"github.com/labstack/echo"
 	"net/http"
 )
