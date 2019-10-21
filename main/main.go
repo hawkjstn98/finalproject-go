@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hawkjstn98/FinalProjectEnv/main/controller"
+	"github.com/hawkjstn98/FinalProjectEnv/main/route"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"net/http"
@@ -15,15 +15,13 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+
 	// Routes
-	e.GET("/", hello)
-	e.GET("/getData", controller.GetAllData)
+	route.MainRouter(e)
+
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-// Handler
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
-}
+
