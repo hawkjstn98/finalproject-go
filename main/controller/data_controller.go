@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/user_services"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
