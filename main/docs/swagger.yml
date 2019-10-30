@@ -1,0 +1,31 @@
+swagger: "2.0"
+info:
+  contact:
+    name: vjs
+  title: WAN-WAN-GO-BE
+  version: 0.0.1
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+paths:
+  /getData:
+    get:
+      tags:
+        - Get Data
+      description: Get Data Handler
+      responses:
+        200:
+          description: success response
+          schema:
+            $ref: "#/definitions/responseGetData"
+definitions:
+  requestAddFlight:
+    type: object
+    properties:
+      res:
+        type: string
+        format: string
