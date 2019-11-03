@@ -2,10 +2,13 @@ package dbhealthcheck
 
 import (
 	"fmt"
-	"github.com/hawkjstn98/FinalProjectEnv/main/repository/mongoConfig"
+	"github.com/hawkjstn98/FinalProjectEnv/main/helper/mongoConfig"
 )
 
-func CheckAndGetConfig() mongoConfig.MongoConfig{
+//this shit must be moved somewhere but can't on entity
+var Conf = CheckAndGetConfig();
+
+func CheckAndGetConfig() mongoConfig.MongoConfig {
 	mongoConfig := mongoConfig.Configuration()
 
 	if mongoConfig.MongoClient == nil || mongoConfig.Status == false {
