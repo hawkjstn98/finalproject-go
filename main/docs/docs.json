@@ -70,6 +70,15 @@
           "format": "string"
         }
       }
+    },
+    "responseThreadPage": {
+      "type": "object",
+      "properties": {
+        "res": {
+          "type": "string",
+          "format": "string"
+        }
+      }
     }
   }
 }
