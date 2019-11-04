@@ -10,3 +10,7 @@ func GetThreadPage() string {
 	result, _ := json.Marshal(thread)
 	return string(result)
 }
+
+func GetThreadCategoryPage(category string) string{
+
+}
