@@ -39,7 +39,7 @@
     },
     "/getThreadPage": {
       "get": {
-        "tags": ["Get Thread for Forum - Home"],
+        "tags": ["Get Thread for Forum"],
         "description": "Get Data Handler",
         "responses": {
           "200": {
