@@ -14,7 +14,7 @@ var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 var userCollection = client.Database(mongo_constant.DBName).Collection(user.UserCollection)
 
-func GetThreadPage() (result []*forum.ThreadPage) {
+func GetThreadPage() (result []*forum.Thread) {
 	cursor, err := threadCollection.Find(context.TODO(), bson.D{{}})
 
 	if err != nil{
@@ -29,28 +29,8 @@ func GetThreadPage() (result []*forum.ThreadPage) {
 			log.Println("Data Error", err)
 			return
 		}
-		filter := bson.M{"username": thread.MakerUsername}
-		var userThread user.User
-		ctx := context.Background()
-		cursorUser := userCollection.FindOne(ctx, filter)
-		cursorUser.Decode(&userThread)
-		log.Println("cursorUser: ", &userThread)
-
-		var currThread forum.ThreadPage
-
-		currThread.Id = thread.Id
-		currThread.Timestamp = thread.Timestamp
-		currThread.Name = thread.Name
-		currThread.Category = thread.Category
-		currThread.MakerUsername = thread.MakerUsername
-		currThread.MakerImage = userThread.ProfileImage
-		currThread.Description = thread.Description
-		currThread.CommentNumber = len(thread.CommentList)
-
-		result = append(result, &currThread)
+		result = append(result, &thread)
 	}
-
-
 
 	return result
 
