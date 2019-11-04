@@ -24,16 +24,11 @@ func GetThreadPage() (result []*forum.ThreadPage) {
 
 	for cursor.Next(context.Background()){
 		var thread forum.Thread
-		//log.Println("Cursor: ", cursor)
 		err := cursor.Decode(&thread)
-		//log.Println("Decode: ", &thread)
-
-		//
 		if err != nil {
 			log.Println("Data Error", err)
 			return
 		}
-		//log.Println("Thread: ", thread.MakerUsername)
 		filter := bson.M{"username": thread.MakerUsername}
 		var userThread user.User
 		ctx := context.Background()

@@ -8,7 +8,6 @@ import (
 )
 
 func GetThread(c echo.Context) (err error) {
-	log.Println("Masuk disini")
 	result := forum_services.GetThreadPage()
 	return c.String(http.StatusOK, result)
 }
