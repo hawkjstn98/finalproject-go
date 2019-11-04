@@ -36,6 +36,20 @@
           }
         }
       }
+    },
+    "/getThreadPage": {
+      "get": {
+        "tags": ["Get Thread for Forum"],
+        "description": "Get Data Handler",
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/responseThreadPage"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -49,6 +63,15 @@
       }
     },
     "responseGetData": {
+      "type": "object",
+      "properties": {
+        "res": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "responseThreadPage": {
       "type": "object",
       "properties": {
         "res": {

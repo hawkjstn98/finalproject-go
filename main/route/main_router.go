@@ -26,6 +26,7 @@ func MainRouter(e *echo.Echo) {
 	e.File("/docs/swagger", "main/docs/docs.json")
 	e.Static("/docs", "main/docs")
 	router.UCtrl(e)
+	router.FCtrl(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 

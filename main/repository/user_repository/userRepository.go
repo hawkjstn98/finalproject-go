@@ -68,3 +68,13 @@ func RegisterUser(usr *user.User) (bool, string) {
 
 	return false, "Username"
 }
+
+func GetUserImage(username string) string{
+	filter := bson.M{"username": username}
+	var userThread user.User
+	ctx := context.Background()
+	cursorUser := userCollection.FindOne(ctx, filter)
+	cursorUser.Decode(&userThread)
+	log.Println("cursorUser: ", &userThread)
+	return userThread.ProfileImage
+}

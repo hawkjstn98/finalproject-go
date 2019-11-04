@@ -22,6 +22,16 @@ paths:
           description: success response
           schema:
             $ref: "#/definitions/responseGetData"
+  /getThreadPage:
+    get:
+      tags:
+        - Get Thread for Forum
+      description: Get Data Handler
+      responses:
+        200:
+          description: success response
+          schema:
+            $ref: "#/definitions/responseThreadPage"
 definitions:
   requestAddFlight:
     type: object
