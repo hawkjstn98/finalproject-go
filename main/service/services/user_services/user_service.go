@@ -8,6 +8,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
+	"log"
 )
 
 func GetAllUserData() string {
@@ -84,10 +85,33 @@ func AddOrUpdateGameList(req *request.AddOrUpdateGameListRequest) string {
 	}
 
 	res, msg, results := user_repository.AddOrUpdateGameList(req.Username, req.GameList)
-	fmt.Println(results)
+	log.Println(results)
 
 	if res {
 		response.Response.Message = "Successfully Add Or Update your game"
+		response.Response.ResponseCode = "Update Success"
+	} else {
+		response.Response.Message = "Login Failed, "+msg
+		response.Response.ResponseCode = "Update Failed"
+	}
+
+	result, _ := json.Marshal(response)
+	return string(result)
+}
+
+func AddOrUpdatePhone(req *request.AddOrUpdatePhoneRequest) string {
+	response := new(response.AddOrUpdatePhoneResponse)
+
+	if ""==req.Username || ""==req.PhoneNumber {
+		response.Response.Message = "Invalid Request Format"
+		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
+	}
+
+	res, msg, results := user_repository.AddOrUpdatePhoneNumber(req.Username, req.PhoneNumber)
+	log.Println(results)
+
+	if res {
+		response.Response.Message = "Successfully Add Or Update your PhoneNumber"
 		response.Response.ResponseCode = "Update Success"
 	} else {
 		response.Response.Message = "Login Failed, "+msg
