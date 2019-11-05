@@ -121,3 +121,26 @@ func AddOrUpdatePhone(req *request.AddOrUpdatePhoneRequest) string {
 	result, _ := json.Marshal(response)
 	return string(result)
 }
+
+func GetUserData(username string) string {
+
+	response := new(response.UserDataResponse)
+
+	res, usr := user_repository.GetUserData(username)
+
+	fmt.Println("pler",usr)
+
+	if res {
+		usr.Response.Message = "Successfully Fetch User Data"
+		usr.Response.ResponseCode = "Get User Success"
+	} else {
+		usr.Response.Message = "Fetch User Data Failed"
+		usr.Response.ResponseCode = "Get User Failed"
+	}
+
+	response = usr
+
+	result, _ := json.Marshal(response)
+
+	return string(result)
+}

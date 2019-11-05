@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/user"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
@@ -128,4 +129,18 @@ func AddOrUpdatePhoneNumber(username string, phoneNumber string) (bool, string, 
 
 	return true, "Update Success", doc
 
+}
+
+func GetUserData(username string) (bool, *response.UserDataResponse){
+
+	var user response.UserDataResponse
+
+	filter := bson.M{"username": username}
+
+	err := userCollection.FindOne(context.TODO(), filter).Decode(&user)
+
+	if err != nil {
+		return false, &user
+	}
+	return true, &user
 }
