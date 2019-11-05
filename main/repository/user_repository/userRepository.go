@@ -48,7 +48,7 @@ func RegisterUser(usr *user.User) (bool, string) {
 
 	if userName.Username == "" {
 		var userEmail user.User
-		filter := bson.M{"email":usr.Email}
+		filter := bson.M{"email": usr.Email}
 		err := userCollection.FindOne(context.TODO(), filter).Decode(&userEmail)
 		if err != nil {
 			log.Print(err)
@@ -59,7 +59,7 @@ func RegisterUser(usr *user.User) (bool, string) {
 			if err != nil {
 				log.Print(err)
 			}
-			log.Println("user: ",insertRes)
+			log.Println("user: ", insertRes)
 			return true, ""
 		}
 
@@ -69,7 +69,27 @@ func RegisterUser(usr *user.User) (bool, string) {
 	return false, "Username"
 }
 
-func GetUserImage(username string) string{
+func UserLogin(email string, password string) (bool, string) {
+
+	var user user.User
+
+	filter := bson.M{
+		"$and": []bson.M{
+			bson.M{"email": email},
+			bson.M{"password": password},
+		},
+	}
+
+	err := userCollection.FindOne(context.TODO(), filter).Decode(&user)
+
+	if err != nil {
+		return false, "User Not Found"
+	}
+
+	return true, user.Username
+}
+
+func GetUserImage(username string) string {
 	filter := bson.M{"username": username}
 	var userThread user.User
 	ctx := context.Background()
@@ -77,4 +97,19 @@ func GetUserImage(username string) string{
 	cursorUser.Decode(&userThread)
 	log.Println("cursorUser: ", &userThread)
 	return userThread.ProfileImage
+}
+
+func AddOrUpdateGameList(username string, gameList [] string) (bool, string, interface{}) {
+	filter := bson.M{"username": username}
+
+	update := bson.M{"$set": bson.M{"gameList": gameList}}
+
+	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
+
+	if doc == nil {
+		log.Println("AddOrUpdate, Update Failed")
+		return false, "User Not Found", doc
+	}
+
+	return true, "Update Success", doc
 }

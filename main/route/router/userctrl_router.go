@@ -9,4 +9,6 @@ import (
 func UCtrl(e *echo.Echo) {
 	e.GET("/getData", controller.GetAllData)
 	e.POST("/register", userController.Register)
+	e.POST("/login", userController.Login)
+	e.PUT("/addUpdateGameList/:username", userController.AddOrUpdateGameList)
 }
