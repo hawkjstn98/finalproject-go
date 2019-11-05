@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func UCtrl(e *echo.Echo) {
+func UserRouter(e *echo.Echo) {
 	e.GET("/getData", controller.GetAllData)
 	e.POST("/register", userController.Register)
 	e.POST("/login", userController.Login)
