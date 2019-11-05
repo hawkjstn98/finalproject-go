@@ -47,3 +47,19 @@ func AddOrUpdateGameList(c echo.Context) (err error){
 
 	return c.String(http.StatusOK, result)
 }
+
+func AddOrUpdatePhoneNumber(c echo.Context) (err error) {
+	r := new(request.AddOrUpdatePhoneRequest)
+
+	usrname := c.Param("username")
+
+	r.Username = usrname
+
+	if err = c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := user_services.AddOrUpdatePhone(r)
+
+	return c.String(http.StatusOK, result)
+}

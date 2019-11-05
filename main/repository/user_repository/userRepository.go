@@ -113,3 +113,19 @@ func AddOrUpdateGameList(username string, gameList [] string) (bool, string, int
 
 	return true, "Update Success", doc
 }
+
+func AddOrUpdatePhoneNumber(username string, phoneNumber string) (bool, string, interface{})  {
+	filter := bson.M{"username": username}
+
+	update := bson.M{"$set": bson.M{"phoneNumber": phoneNumber}}
+
+	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
+
+	if doc == nil {
+		log.Println("AddOrUpdate Phone, Update Failed")
+		return false, "User Not Found", doc
+	}
+
+	return true, "Update Success", doc
+
+}

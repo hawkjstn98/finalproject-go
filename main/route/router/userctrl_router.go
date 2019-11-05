@@ -11,4 +11,5 @@ func UCtrl(e *echo.Echo) {
 	e.POST("/register", userController.Register)
 	e.POST("/login", userController.Login)
 	e.PUT("/addUpdateGameList/:username", userController.AddOrUpdateGameList)
+	e.PUT("/addUpdatePhoneNumber/:username", userController.AddOrUpdatePhoneNumber)
 }
