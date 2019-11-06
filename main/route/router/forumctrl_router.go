@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func FCtrl(e *echo.Echo) {
+func ForumRouter(e *echo.Echo) {
 	e.GET("/getThreadPage", forumController.GetThread)
 	e.GET("/getThreadCategoryPage", forumController.GetThreadCategory)
 	e.GET("/getThreadMaxPage", forumController.GetThreadMaxPage)
