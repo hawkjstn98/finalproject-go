@@ -8,8 +8,8 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
+	"log"
 )
-
 
 func GetAllUserData() string {
 	user := user_repository.LoadAllUserData()
@@ -19,31 +19,103 @@ func GetAllUserData() string {
 
 func RegisterUser(req *request.RegisterRequest) string {
 	response := new(response.RegisterResponse)
-	if req.Email==""||req.Username==""||req.PhoneNumber==""||req.Password=="" {
-		response.Message = "Failed to Register User, Field Cannot be Empty"
-		response.ResponseCode = "FAILED"
+	if "" == req.Email || "" == req.Username || "" == req.PhoneNumber || "" == req.Password {
+		response.Response.Message = "Failed to Register User, Field Cannot be Empty"
+		response.Response.ResponseCode = "FAILED"
 		result, _ := json.Marshal(response)
 		return string(result)
 	}
 	var usr = new(user.User)
-	fmt.Println("Request :",req)
+	fmt.Println("Request :", req)
 
 	usr.Email = req.Email
 	usr.Password = helper.SavePassword(req.Password)
 	usr.PhoneNumber = req.PhoneNumber
 	usr.Username = req.Username
 
-	fmt.Println("Data :",usr)
+	fmt.Println("Data :", usr)
 
 	res, msg := user_repository.RegisterUser(usr)
 
+	if res {
+		response.Response.Message = "Successfully Register User"
+		response.Response.ResponseCode = "SUCCESS"
+	} else {
+		response.Response.Message = "Failed to Register User, Duplicate " + msg
+		response.Response.ResponseCode = "FAILED"
+	}
 
-	if res{
-		response.Message = "Successfully Register User"
-		response.ResponseCode = "SUCCESS"
-	}else{
-		response.Message = "Failed to Register User, Duplicate "+msg
-		response.ResponseCode = "FAILED"
+	result, _ := json.Marshal(response)
+	return string(result)
+}
+
+func LoginUser(req *request.LoginRequest) string {
+	response := new(response.LoginResponse)
+
+	if "" == req.Password || "" == req.Email {
+		response.Response.Message = "Invalid Username or Password Format"
+		response.Response.ResponseCode = "FAILED TO LOGIN"
+	}
+
+	pass := helper.SavePassword(req.Password)
+
+	res, msg := user_repository.UserLogin(req.Email, pass)
+	fmt.Println(res)
+
+	if res {
+		response.Username = msg
+		response.Response.Message = "Success Login, Welcome " + response.Username
+		response.Response.ResponseCode = "Success Login"
+	} else {
+		response.Username = msg
+		response.Response.Message = "Login Failed"
+		response.Response.ResponseCode = "Email or password not found"
+	}
+
+	result, _ := json.Marshal(response)
+	return string(result)
+}
+
+func AddOrUpdateGameList(req *request.AddOrUpdateGameListRequest) string {
+	response := new (response.AddOrUpdateGameListResponse)
+
+	if ""==req.Username || len(req.GameList)<=0 {
+		response.Response.Message = "Invalid Request Format"
+		response.Response.ResponseCode = "Failed To Insert GameList"
+	}
+
+	res, msg, results := user_repository.AddOrUpdateGameList(req.Username, req.GameList)
+	log.Println(results)
+
+	if res {
+		response.Response.Message = "Successfully Add Or Update your game"
+		response.Response.ResponseCode = "Update Success"
+	} else {
+		response.Response.Message = "Login Failed, "+msg
+		response.Response.ResponseCode = "Update Failed"
+	}
+
+	result, _ := json.Marshal(response)
+	return string(result)
+}
+
+func AddOrUpdatePhone(req *request.AddOrUpdatePhoneRequest) string {
+	response := new(response.AddOrUpdatePhoneResponse)
+
+	if ""==req.Username || ""==req.PhoneNumber {
+		response.Response.Message = "Invalid Request Format"
+		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
+	}
+
+	res, msg, results := user_repository.AddOrUpdatePhoneNumber(req.Username, req.PhoneNumber)
+	log.Println(results)
+
+	if res {
+		response.Response.Message = "Successfully Add Or Update your PhoneNumber"
+		response.Response.ResponseCode = "Update Success"
+	} else {
+		response.Response.Message = "Login Failed, "+msg
+		response.Response.ResponseCode = "Update Failed"
 	}
 
 	result, _ := json.Marshal(response)

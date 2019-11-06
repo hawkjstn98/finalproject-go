@@ -1,5 +1,5 @@
 package response
 
-type RegisterResponse struct{
+type AddOrUpdatePhoneResponse struct {
 	Response BasicResponse
 }
