@@ -33,5 +33,26 @@ func GetThreadPage() (result []*forum.Thread) {
 	}
 
 	return result
+}
 
+func GetThreadCategory(category string) (result []*forum.Thread) {
+	filter := bson.M{"category": category}
+	cursor, err := threadCollection.Find(context.TODO(), filter)
+
+	if err != nil{
+		log.Println("Document Error: ", err)
+		return
+	}
+
+	for cursor.Next(context.Background()){
+		var thread forum.Thread
+		err := cursor.Decode(&thread)
+		if err != nil {
+			log.Println("Data Error", err)
+			return
+		}
+		result = append(result, &thread)
+	}
+
+	return result
 }

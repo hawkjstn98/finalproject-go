@@ -55,6 +55,13 @@
       "get": {
         "tags": ["Get Thread for Forum - Category"],
         "description": "Get Data Handler",
+        "parameters": {
+          "name": "ThreadCategoryRequest",
+          "in": "body",
+          "schema": {
+            "type": "#/definitions/requestThreadCategoryPage"
+          }
+        },
         "responses": {
           "200": {
             "description": "success response",
@@ -100,6 +107,15 @@
         "res": {
           "type": "string",
           "format": "string"
+        }
+      }
+    },
+    "requestThreadCategoryPage": {
+      "type": "object",
+      "properties": {
+        "res": {
+          "type": "string",
+          "format": "ThreadCategoryRequest"
         }
       }
     }
