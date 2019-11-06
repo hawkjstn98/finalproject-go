@@ -9,12 +9,14 @@ import(
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 )
 
-func GetThreadPage() string {
-	threads := thread_repository.GetThreadPage()
-
+func GetThreadPage(page *request.ThreadRequest) string {
+	threads := thread_repository.GetThreadPage(page.Page)
 	threadsPage := MapThreadToPage(threads)
 
-	result, _ := json.Marshal(threadsPage)
+	end := len(threadsPage)
+	start := GetStart(end)
+
+	result, _ := json.Marshal(threadsPage[int(start):end])
 	return string(result)
 }
 
@@ -28,7 +30,6 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string{
 
 func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.ThreadPage) {
 	for i := range threads{
-		log.Println("thread: ", threads[i])
 		var currThread forum.ThreadPage
 		imageLink := user_repository.GetUserImage(threads[i].MakerUsername)
 
@@ -50,15 +51,27 @@ func GetMaxPage(category *request.ThreadMaxPageRequest) int {
 	var threads []*forum.Thread
 
 	if "" == category.Category {
-		threads = thread_repository.GetThreadPage()
+		threads = thread_repository.GetThreadPage(category.Page)
 	} else{
 		threads = thread_repository.GetThreadCategory(category.Category)
 	}
 	threadsPage := MapThreadToPage(threads)
-	log.Println("Category: ", len(threadsPage))
+	//log.Println("Category: ", len(threadsPage))
 	if len(threadsPage) % 10 == 0 {
 		return len(threadsPage)/10
 	} else {
 		return (len(threadsPage)/10) + 1
+	}
+}
+
+func GetStart(end int) (int){
+	if int(end) > 10{
+		if int(end) % 10 == 0{
+			return int(end) - 10
+		} else {
+			return (int(end) / 10) * 10
+		}
+	} else {
+		return 0
 	}
 }
