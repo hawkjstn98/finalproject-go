@@ -12,4 +12,5 @@ func UserRouter(e *echo.Echo) {
 	e.POST("/login", userController.Login)
 	e.PUT("/addUpdateGameList/:username", userController.AddOrUpdateGameList)
 	e.PUT("/addUpdatePhoneNumber/:username", userController.AddOrUpdatePhoneNumber)
+	e.GET("/getUserData/:username", userController.GetUserData)
 }
