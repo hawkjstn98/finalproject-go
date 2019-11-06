@@ -96,7 +96,6 @@ func GetUserImage(username string) string {
 	ctx := context.Background()
 	cursorUser := userCollection.FindOne(ctx, filter)
 	cursorUser.Decode(&userThread)
-	log.Println("cursorUser: ", &userThread)
 	return userThread.ProfileImage
 }
 
