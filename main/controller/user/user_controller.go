@@ -32,7 +32,7 @@ func Login(c echo.Context) (err error) {
 	return c.String(http.StatusOK, result)
 }
 
-func AddOrUpdateGameList(c echo.Context) (err error){
+func AddOrUpdateGameList(c echo.Context) (err error) {
 	r := new(request.AddOrUpdateGameListRequest)
 
 	usrname := c.Param("username")
@@ -60,6 +60,19 @@ func AddOrUpdatePhoneNumber(c echo.Context) (err error) {
 	}
 
 	result := user_services.AddOrUpdatePhone(r)
+
+	return c.String(http.StatusOK, result)
+}
+
+func GetUserData(c echo.Context) (err error) {
+
+	usrname := c.Param("username")
+
+	if "" == usrname {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := user_services.GetUserData(usrname)
 
 	return c.String(http.StatusOK, result)
 }

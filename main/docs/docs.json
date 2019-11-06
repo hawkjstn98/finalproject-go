@@ -50,7 +50,28 @@
           }
         }
       }
-    }
+    },
+    "/getThreadCategoryPage": {
+      "get": {
+        "tags": ["Get Thread for Forum - Category"],
+        "description": "Get Data Handler",
+        "parameters": {
+          "name": "ThreadCategoryRequest",
+          "in": "body",
+          "schema": {
+            "type": "#/definitions/requestThreadCategoryPage"
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/responseThreadCategoryPage"
+            }
+          }
+        }
+      }
+    },
   },
   "definitions": {
     "responseRoot": {
@@ -77,6 +98,24 @@
         "res": {
           "type": "string",
           "format": "string"
+        }
+      }
+    },
+    "responseThreadCategoryPage": {
+      "type": "object",
+      "properties": {
+        "res": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "requestThreadCategoryPage": {
+      "type": "object",
+      "properties": {
+        "res": {
+          "type": "string",
+          "format": "ThreadCategoryRequest"
         }
       }
     }

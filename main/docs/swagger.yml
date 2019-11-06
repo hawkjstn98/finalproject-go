@@ -25,13 +25,28 @@ paths:
   /getThreadPage:
     get:
       tags:
-        - Get Thread for Forum
+        - Get Thread for Forum - Home
       description: Get Data Handler
       responses:
         200:
           description: success response
           schema:
             $ref: "#/definitions/responseThreadPage"
+  /getThreadCategoryPage:
+    get:
+      tags:
+        - Get Thread for Forum - Category
+      description: Get Data Handler
+      parameters:
+        - name: ThreadCategoryRequest
+          in: body
+          schema:
+            type: "#/definitions/requestThreadCategoryPage"
+      responses:
+        200:
+          description: success response
+          schema:
+            $ref: "#/definitions/responseThreadCategoryPage"
 definitions:
   requestAddFlight:
     type: object
