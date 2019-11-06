@@ -45,3 +45,20 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.ThreadPage) {
 	}
 	return threadsPage
 }
+
+func GetMaxPage(category *request.ThreadMaxPageRequest) int {
+	var threads []*forum.Thread
+
+	if "" == category.Category {
+		threads = thread_repository.GetThreadPage()
+	} else{
+		threads = thread_repository.GetThreadCategory(category.Category)
+	}
+	threadsPage := MapThreadToPage(threads)
+	log.Println("Category: ", len(threadsPage))
+	if len(threadsPage) % 10 == 0 {
+		return len(threadsPage)/10
+	} else {
+		return (len(threadsPage)/10) + 1
+	}
+}
