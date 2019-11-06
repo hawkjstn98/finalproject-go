@@ -10,7 +10,11 @@ import (
 )
 
 func GetThread(c echo.Context) (err error) {
-	result := forum_services.GetThreadPage()
+	page := new(request.ThreadRequest)
+	if err = c.Bind(page); err != nil {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+	result := forum_services.GetThreadPage(page)
 	return c.String(http.StatusOK, result)
 }
 

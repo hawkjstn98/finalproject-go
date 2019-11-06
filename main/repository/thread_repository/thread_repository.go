@@ -7,6 +7,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/user"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 )
 
@@ -14,9 +15,8 @@ var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 var userCollection = client.Database(mongo_constant.DBName).Collection(user.UserCollection)
 
-func GetThreadPage() (result []*forum.Thread) {
-	cursor, err := threadCollection.Find(context.TODO(), bson.D{{}})
-
+func GetThreadPage(page int) (result []*forum.Thread) {
+	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, options.Find().SetLimit(int64(int(page) * 10)))
 	if err != nil{
 		log.Println("Document Error: ", err)
 		return
