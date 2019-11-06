@@ -128,7 +128,7 @@ func GetUserData(username string) string {
 
 	res, usr := user_repository.GetUserData(username)
 
-	fmt.Println("pler",usr)
+	//fmt.Println("Test",usr)
 
 	if res {
 		usr.Response.Message = "Successfully Fetch User Data"
