@@ -7,26 +7,12 @@ import (
 	"net/http"
 )
 
-// @title Swagger Final Project API
-// @version 1.0
-// @description .
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost
-// @BasePath /v2
 func MainRouter(e *echo.Echo) {
 	e.GET("/", hello)
 	e.File("/docs/swagger", "main/docs/docs.json")
 	e.Static("/docs", "main/docs")
-	router.UCtrl(e)
-	router.FCtrl(e)
+	router.UserRouter(e)
+	router.ForumRouter(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 
