@@ -21,9 +21,13 @@ func GetThreadPage(page *request.ThreadRequest) string {
 }
 
 func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string{
-	threads := thread_repository.GetThreadCategory(category.Category)
+	threads := thread_repository.GetThreadCategory(category)
 	threadsPage := MapThreadToPage(threads)
-	result, _ := json.Marshal(threadsPage)
+
+	end := len(threadsPage)
+	start := GetStart(end)
+
+	result, _ := json.Marshal(threadsPage[int(start):end])
 	log.Println(category)
 	return string(result)
 }
@@ -47,13 +51,13 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.ThreadPage) {
 	return threadsPage
 }
 
-func GetMaxPage(category *request.ThreadMaxPageRequest) int {
+func GetMaxPage(category *request.ThreadCategoryRequest) int {
 	var threads []*forum.Thread
 
 	if "" == category.Category {
 		threads = thread_repository.GetThreadPage(category.Page)
 	} else{
-		threads = thread_repository.GetThreadCategory(category.Category)
+		threads = thread_repository.GetThreadCategory(category)
 	}
 	threadsPage := MapThreadToPage(threads)
 	//log.Println("Category: ", len(threadsPage))

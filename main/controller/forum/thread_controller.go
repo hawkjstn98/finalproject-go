@@ -29,7 +29,7 @@ func GetThreadCategory(c echo.Context) (err error) {
 }
 
 func GetThreadMaxPage(c echo.Context) (err error){
-	param := new(request.ThreadMaxPageRequest)
+	param := new(request.ThreadCategoryRequest)
 	if err = c.Bind(param); err != nil {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
 	}
