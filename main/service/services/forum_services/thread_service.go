@@ -7,10 +7,11 @@ import(
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"log"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
+	"strconv"
 )
 
 func GetThreadPage() string {
-	threads := thread_repository.GetThreadPage()
+	threads, _ := thread_repository.GetThreadPage()
 
 	threadsPage := MapThreadToPage(threads)
 
@@ -26,10 +27,10 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string{
 	return string(result)
 }
 
-func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.ThreadPage) {
-	for i := range threads{
+func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.Thread) {
+	for i, thread := range threads{
 		log.Println("thread: ", threads[i])
-		var currThread forum.ThreadPage
+		var currThread forum.Thread
 		imageLink := user_repository.GetUserImage(threads[i].MakerUsername)
 
 		currThread.Id = threads[i].Id
@@ -39,7 +40,9 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.ThreadPage) {
 		currThread.MakerUsername = threads[i].MakerUsername
 		currThread.MakerImage = imageLink
 		currThread.Description = threads[i].Description
-		currThread.CommentNumber = len(threads[i].CommentList)
+		id, _ := strconv.Atoi(thread.Id.String())
+		count, _ := thread_repository.GetThreadDetail(id)
+		currThread.CommentCount = count
 
 		threadsPage = append(threadsPage, currThread)
 	}
@@ -50,7 +53,7 @@ func GetMaxPage(category *request.ThreadMaxPageRequest) int {
 	var threads []*forum.Thread
 
 	if "" == category.Category {
-		threads = thread_repository.GetThreadPage()
+		threads, _ = thread_repository.GetThreadPage()
 	} else{
 		threads = thread_repository.GetThreadCategory(category.Category)
 	}

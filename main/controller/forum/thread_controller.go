@@ -15,7 +15,15 @@ func GetThread(c echo.Context) (err error) {
 }
 
 func GetThreadDetail(c echo.Context) (err error){
-	res := forum_services.GetThreadDetail()
+	req := new(request.ThreadDetailRequest)
+	if err = c.Bind(req); err != nil {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	res, err := forum_services.GetThreadDetail(req)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, request_constant.InternalServerError)
+	}
 	return c.String(http.StatusOK, res)
 }
 
