@@ -1,6 +1,6 @@
 package request
 
 type ThreadDetailRequest struct {
-	ThreadID int `json:"threadId" bson:"threadId"`
+	ThreadID string `json:"threadId" bson:"threadId"`
 	Page int `json:"page" bson:"page"`
 }

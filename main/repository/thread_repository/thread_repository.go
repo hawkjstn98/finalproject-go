@@ -14,7 +14,7 @@ import (
 var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 
-func GetThreadPage(page int) (result []*forum.Thread) {
+func GetThreadPage(page int) (result []*forum.Thread, err error) {
 	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, options.Find().SetLimit(int64(int(page) * 10)))
 	if err != nil{
 		log.Println("Document Error: ", err)
@@ -56,7 +56,7 @@ func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum
 	return result
 }
 
-func GetThread(id int) (result *forum.Thread, err error){
+func GetThread(id string) (result *forum.Thread, err error){
 	cursor, err := threadCollection.Find(context.Background(), bson.D{{"_id", id}})
 
 	if err != nil{
@@ -75,7 +75,7 @@ func GetThread(id int) (result *forum.Thread, err error){
 	return result, nil
 }
 
-func GetThreadDetail(id int) (result []*forum.ObjectComment, err error){
+func GetThreadDetail(id string) (result []*forum.ObjectComment, err error){
 	cursor, err := threadCollection.Find(context.Background(), bson.D{{}})
 
 	if err != nil{
