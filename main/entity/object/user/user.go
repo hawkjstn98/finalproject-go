@@ -5,7 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const UserCollection = "user"
+const Collection = "user"
 
 type User struct {
 	PhoneNumber 	string               `json:"phoneNumber" bson:"phoneNumber"`
