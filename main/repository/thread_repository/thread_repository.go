@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 )
 
 var client = dbhealthcheck.Conf.MongoClient
@@ -35,9 +36,9 @@ func GetThreadPage(page int) (result []*forum.Thread) {
 	return result
 }
 
-func GetThreadCategory(category string) (result []*forum.Thread) {
-	filter := bson.M{"category": category}
-	cursor, err := threadCollection.Find(context.TODO(), filter)
+func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
+	filter := bson.M{"category": category.Category}
+	cursor, err := threadCollection.Find(context.TODO(), filter, options.Find().SetLimit(int64(int(category.Page) * 10)))
 
 	if err != nil{
 		log.Println("Document Error: ", err)
