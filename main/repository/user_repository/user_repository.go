@@ -12,7 +12,7 @@ import (
 )
 
 var client = dbhealthcheck.Conf.MongoClient
-var userCollection = client.Database(mongo_constant.DBName).Collection(user.UserCollection)
+var userCollection = client.Database(mongo_constant.DBName).Collection(user.Collection)
 
 func LoadAllUserData() (result []*user.User) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
