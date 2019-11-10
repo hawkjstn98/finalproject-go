@@ -4,25 +4,25 @@ import (
 	"context"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 
 func GetThreadPage(page int) (result []*forum.Thread, err error) {
-	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, options.Find().SetLimit(int64(int(page) * 10)))
-	if err != nil{
+	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, options.Find().SetLimit(int64(int(page)*10)))
+	if err != nil {
 		log.Println("Document Error: ", err)
 		return
 	}
 
-	for cursor.Next(context.Background()){
+	for cursor.Next(context.Background()) {
 		var thread forum.Thread
 		err := cursor.Decode(&thread)
 		if err != nil {
@@ -37,14 +37,14 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 
 func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
 	filter := bson.M{"category": category.Category}
-	cursor, err := threadCollection.Find(context.TODO(), filter, options.Find().SetLimit(int64(int(category.Page) * 10)))
+	cursor, err := threadCollection.Find(context.TODO(), filter, options.Find().SetLimit(int64(int(category.Page)*10)))
 
-	if err != nil{
+	if err != nil {
 		log.Println("Document Error: ", err)
 		return
 	}
 
-	for cursor.Next(context.Background()){
+	for cursor.Next(context.Background()) {
 		var thread forum.Thread
 		err := cursor.Decode(&thread)
 		if err != nil {
@@ -57,45 +57,23 @@ func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum
 	return result
 }
 
-func GetThread(id string) (result *forum.Thread, err error){
+func GetThread(id string) (result []*forum.Thread, err error) {
 	Id, _ := primitive.ObjectIDFromHex(id)
-	log.Println(Id)
 	filter := bson.M{"_id": Id}
 	cursor, err := threadCollection.Find(context.Background(), filter)
-	log.Println(cursor)
-	if err != nil{
+	if err != nil {
 		log.Println("Document Error: ", err)
 		return
 	}
 
-	if cursor.Next(context.Background()){
-		err := cursor.Decode(&result)
-		if err != nil {
-			result = nil
-			log.Println("Data Error", err)
-			return nil, err
-		}
-	}
-	return result, nil
-}
-
-func GetThreadDetail(id string) (result []*forum.ObjectComment, err error){
-	cursor, err := threadCollection.Find(context.Background(), bson.D{{"masterThreadId", id}})
-
-	if err != nil{
-		log.Println("Document Error: ", err)
-		return
-	}
-
-	for cursor.Next(context.Background()){
-		var comment forum.ObjectComment
-		err := cursor.Decode(&comment)
+	if cursor.Next(context.Background()) {
+		var thread forum.Thread
+		err := cursor.Decode(&thread)
 		if err != nil {
 			log.Println("Data Error", err)
 			return nil, err
 		}
-		result = append(result, &comment)
+		result = append(result, &thread)
 	}
-
 	return result, nil
 }

@@ -1,11 +1,11 @@
 package forum_services
 
-import(
+import (
 	"encoding/json"
-	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
-	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
+	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
+	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 )
 
 func GetThreadPage(page *request.ThreadRequest) string {
