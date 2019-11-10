@@ -77,9 +77,9 @@ func LoginUser(req *request.LoginRequest) string {
 }
 
 func AddOrUpdateGameList(req *request.AddOrUpdateGameListRequest) string {
-	response := new (response.AddOrUpdateGameListResponse)
+	response := new(response.AddOrUpdateGameListResponse)
 
-	if ""==req.Username || len(req.GameList)<=0 {
+	if "" == req.Username || len(req.GameList) <= 0 {
 		response.Response.Message = "Invalid Request Format"
 		response.Response.ResponseCode = "Failed To Insert GameList"
 	}
@@ -91,7 +91,7 @@ func AddOrUpdateGameList(req *request.AddOrUpdateGameListRequest) string {
 		response.Response.Message = "Successfully Add Or Update your game"
 		response.Response.ResponseCode = "Update Success"
 	} else {
-		response.Response.Message = "Login Failed, "+msg
+		response.Response.Message = "Login Failed, " + msg
 		response.Response.ResponseCode = "Update Failed"
 	}
 
@@ -102,7 +102,7 @@ func AddOrUpdateGameList(req *request.AddOrUpdateGameListRequest) string {
 func AddOrUpdatePhone(req *request.AddOrUpdatePhoneRequest) string {
 	response := new(response.AddOrUpdatePhoneResponse)
 
-	if ""==req.Username || ""==req.PhoneNumber {
+	if "" == req.Username || "" == req.PhoneNumber {
 		response.Response.Message = "Invalid Request Format"
 		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
 	}
@@ -114,7 +114,7 @@ func AddOrUpdatePhone(req *request.AddOrUpdatePhoneRequest) string {
 		response.Response.Message = "Successfully Add Or Update your PhoneNumber"
 		response.Response.ResponseCode = "Update Success"
 	} else {
-		response.Response.Message = "Login Failed, "+msg
+		response.Response.Message = "Login Failed, " + msg
 		response.Response.ResponseCode = "Update Failed"
 	}
 

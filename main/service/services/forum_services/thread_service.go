@@ -2,8 +2,10 @@ package forum_services
 
 import (
 	"encoding/json"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/insert"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"strconv"
@@ -20,7 +22,7 @@ func GetThreadPage(page *request.ThreadRequest) string {
 	return string(result)
 }
 
-func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string{
+func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	threads := thread_repository.GetThreadCategory(category)
 	threadsPage := MapThreadToPage(threads)
 
@@ -32,7 +34,7 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string{
 }
 
 func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.Thread) {
-	for i := range threads{
+	for i := range threads {
 		var currThread forum.Thread
 		imageLink := user_repository.GetUserImage(threads[i].MakerUsername)
 
@@ -56,7 +58,7 @@ func GetMaxPage(category *request.ThreadCategoryRequest) string {
 
 	if "" == category.Category {
 		threads, _ = thread_repository.GetThreadPage(category.Page)
-	} else{
+	} else {
 		threads = thread_repository.GetThreadCategory(category)
 	}
 	threadsPage := MapThreadToPage(threads)
@@ -67,9 +69,9 @@ func GetMaxPage(category *request.ThreadCategoryRequest) string {
 	}
 }
 
-func GetStart(end int) (int){
-	if int(end) > 10{
-		if int(end) % 10 == 0{
+func GetStart(end int) (int) {
+	if int(end) > 10 {
+		if int(end)%10 == 0 {
 			return int(end) - 10
 		} else {
 			return (int(end) / 10) * 10
@@ -77,4 +79,34 @@ func GetStart(end int) (int){
 	} else {
 		return 0
 	}
+}
+
+func CreateThread(threadRequest *request.CreateThreadRequest) string {
+	response := new(response.CreateThreadResponse)
+
+	if "" == threadRequest.MakerUsername || "" == threadRequest.Name || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
+		response.Response.Message = "Invalid Request Format"
+		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
+	}
+
+	var thread = new(insert.ThreadInsert)
+	thread.Timestamp = threadRequest.Timestamp
+	thread.Description = threadRequest.Description
+	thread.Category = threadRequest.Category
+	thread.MakerUsername = threadRequest.MakerUsername
+	thread.Name = threadRequest.Name
+
+	res, msg := thread_repository.CreateThread(thread)
+
+	if res {
+		response.Response.Message = msg
+		response.Response.ResponseCode = "Create Thread Success"
+	} else {
+		response.Response.Message = "Create Thread failed, " + msg
+		response.Response.ResponseCode = "Create Thread Failed"
+	}
+
+	result, _ := json.Marshal(response)
+	return string(result)
+
 }
