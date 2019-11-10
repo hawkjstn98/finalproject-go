@@ -48,7 +48,7 @@ func CreateEvent(req event.EventInsert) string {
 	return string(resp)
 }
 
-func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []string, dataLongitude []string) *maps.DistanceMatrixResponse {
+func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []string, dataLongitude []string) []float32 {
 	count := len(dataLatitude)
 	origin := make([]string, count)
 	destinations := make([]string, count)
@@ -70,8 +70,14 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}
+	distances := make([]float32, count)
+	element := new(maps.DistanceMatrixElement)
+	for i := 0; i < count; i++ {
+		element = resp.Rows[i].Elements[i]
+		distances[i] = float32(element.Distance.Meters/1000)
+	}
 
-	return resp
+	return distances
 }
 
 func MapToEventList(events []*event.GameEvent) (eventList []*event.GameEvent) {
