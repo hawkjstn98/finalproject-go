@@ -38,7 +38,7 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 
 func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
 	filter := bson.M{"category": category.Category}
-	cursor, err := threadCollection.Find(context.TODO(), filter, options.Find().SetLimit(int64(int(category.Page)*10)))
+	cursor, err := threadCollection.Find(context.TODO(), filter, options.Find().SetSkip(int64(int(category.Page - 1)*10)), options.Find().SetLimit(int64(int(category.Page)*10)))
 
 	if err != nil {
 		log.Println("Document Error: ", err)
@@ -54,6 +54,7 @@ func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum
 		}
 		result = append(result, &thread)
 	}
+	log.Println(result)
 
 	return result
 }
