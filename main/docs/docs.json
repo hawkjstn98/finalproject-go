@@ -80,12 +80,12 @@
           {
             "name": "threadId",
             "type": "string",
-            "in": "header"
+            "in": "query"
           },
           {
             "name": "page",
             "type": "int",
-            "in": "header"
+            "in": "query"
           }
         ],
         "responses": {

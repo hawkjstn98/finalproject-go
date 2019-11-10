@@ -53,10 +53,10 @@ paths:
         - Get Thread Detail for Forum
       description: Get Data Handler
       parameters:
-        - in: header
+        - in: query
           name: threadId
           type: string
-        - in: header
+        - in: query
           name: page
           type: int
       responses:

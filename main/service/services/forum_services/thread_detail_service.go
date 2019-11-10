@@ -28,10 +28,10 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error){
 	if err != nil{
 		return
 	}
-	commentEndIndex := len(comments) - commentStartIndex
 	if req.Page == 1 {
 		commentStartIndex -= 10
 	}
+	commentEndIndex := len(comments) - commentStartIndex
 	comments = comments[commentStartIndex : commentEndIndex]
 	var response response.ThreadDetailResponse
 	response.Thread = thread

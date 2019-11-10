@@ -80,7 +80,7 @@ func GetThread(id string) (result *forum.Thread, err error){
 }
 
 func GetThreadDetail(id string) (result []*forum.ObjectComment, err error){
-	cursor, err := threadCollection.Find(context.Background(), bson.D{{}})
+	cursor, err := threadCollection.Find(context.Background(), bson.D{{"masterThreadId", id}})
 
 	if err != nil{
 		log.Println("Document Error: ", err)
