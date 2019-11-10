@@ -1,11 +1,12 @@
 package threadController
 
 import (
-	"github.com/labstack/echo/v4"
-	"net/http"
-	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/forum_services"
+	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/request_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
+	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/forum_services"
+	"github.com/labstack/echo/v4"
+	"net/http"
 	"strconv"
 )
 
@@ -28,11 +29,31 @@ func GetThreadCategory(c echo.Context) (err error) {
 	return c.String(http.StatusOK, result)
 }
 
-func GetThreadMaxPage(c echo.Context) (err error){
+func GetThreadMaxPage(c echo.Context) (err error) {
 	param := new(request.ThreadMaxPageRequest)
 	if err = c.Bind(param); err != nil {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
 	}
 	result := forum_services.GetMaxPage(param)
 	return c.String(http.StatusOK, strconv.Itoa(result))
+}
+
+func CreateThread(c echo.Context) (err error) {
+	r := new(request.CreateThreadRequest)
+
+	usrname := c.Param("username")
+
+	fmt.Println("user: ",r)
+
+	r.MakerUsername = usrname
+
+	fmt.Println("request: ", r)
+
+	if err = c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := forum_services.CreateThread(r)
+
+	return c.String(http.StatusOK, result)
 }

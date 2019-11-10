@@ -9,4 +9,5 @@ func ForumRouter(e *echo.Echo) {
 	e.GET("/getThreadPage", forumController.GetThread)
 	e.GET("/getThreadCategoryPage", forumController.GetThreadCategory)
 	e.GET("/getThreadMaxPage", forumController.GetThreadMaxPage)
+	e.PUT("/createThread/:username", forumController.CreateThread)
 }

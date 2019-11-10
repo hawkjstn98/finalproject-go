@@ -56,3 +56,16 @@ func GetThreadCategory(category string) (result []*forum.Thread) {
 
 	return result
 }
+
+func CreateThread(request *forum.Thread) (bool, string) {
+	res, err := threadCollection.InsertOne(context.TODO(), request)
+
+	if err != nil {
+		log.Println(err)
+		return false, "Failed To Create Thread to DB"
+	}
+
+	log.Println(res)
+
+	return true, "Success creating Thread"
+}
