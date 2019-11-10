@@ -47,6 +47,23 @@ paths:
           description: success response
           schema:
             $ref: "#/definitions/responseThreadCategoryPage"
+  /getThreadDetail:
+    get:
+      tags:
+        - Get Thread Detail for Forum
+      description: Get Data Handler
+      parameters:
+        - in: query
+          name: threadId
+          type: string
+        - in: query
+          name: page
+          type: int
+      responses:
+        200:
+          description: success response
+          schema:
+            $ref: "#/definitions/responseThreadCategoryPage"
 definitions:
   requestAddFlight:
     type: object
