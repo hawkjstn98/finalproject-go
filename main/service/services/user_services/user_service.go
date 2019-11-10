@@ -9,6 +9,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"log"
+	"time"
 )
 
 func GetAllUserData() string {
@@ -32,6 +33,7 @@ func RegisterUser(req *request.RegisterRequest) string {
 	usr.Password = helper.SavePassword(req.Password)
 	usr.PhoneNumber = req.PhoneNumber
 	usr.Username = req.Username
+	usr.Timestamp = time.Now()
 
 	fmt.Println("Data :", usr)
 
