@@ -114,7 +114,7 @@ func AddOrUpdateGameList(username string, gameList [] string) (bool, string, int
 	return true, "Update Success", doc
 }
 
-func AddOrUpdatePhoneNumber(username string, phoneNumber string) (bool, string, interface{})  {
+func AddOrUpdatePhoneNumber(username string, phoneNumber string) (bool, string, interface{}) {
 	filter := bson.M{"username": username}
 
 	update := bson.M{"$set": bson.M{"phoneNumber": phoneNumber}}
@@ -130,7 +130,7 @@ func AddOrUpdatePhoneNumber(username string, phoneNumber string) (bool, string, 
 
 }
 
-func GetUserData(username string) (bool, *response.UserDataResponse){
+func GetUserData(username string) (bool, *response.UserDataResponse) {
 
 	var user response.UserDataResponse
 

@@ -8,7 +8,7 @@ import (
 const ThreadCollection = "thread"
 
 type Thread struct {
-	Id				primitive.ObjectID `json:"id" bson:"_id"`
+	Id primitive.ObjectID `json:"id" bson:"_id"`
 	Timestamp  	 	time.Time `json:"timestamp" bson:"timestamp"`
 	Name			string `json:"name" bson:"name"`
 	Category		string `json:"category" bson:"category"`
