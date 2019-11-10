@@ -3,9 +3,11 @@ package thread_repository
 import (
 	"context"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/insert"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"

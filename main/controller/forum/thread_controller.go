@@ -1,6 +1,7 @@
 package threadController
 
 import (
+	"github.com/hawkjstn98/FinalProjectEnv/main/utility"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/forum_services"
@@ -57,11 +58,7 @@ func CreateThread(c echo.Context) (err error) {
 
 	usrname := c.Param("username")
 
-	fmt.Println("user: ",r)
-
 	r.MakerUsername = usrname
-
-	fmt.Println("request: ", r)
 
 	if err = c.Bind(r); err != nil {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
