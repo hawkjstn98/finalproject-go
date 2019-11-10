@@ -5,6 +5,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/forum_services"
 	"github.com/hawkjstn98/FinalProjectEnv/main/utility"
+	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
 )
@@ -18,7 +19,7 @@ func GetThread(c echo.Context) (err error) {
 	return c.String(http.StatusOK, result)
 }
 
-func GetThreadDetail(c echo.Context) (err error){
+func GetThreadDetail(c echo.Context) (err error) {
 	m, queries := utility.GetHeader(c, request_constant.ThreadDetailRequest)
 	mappedReq := utility.Map(m, queries, request.ThreadDetailRequest{})
 	req, ok := mappedReq.(request.ThreadDetailRequest)
