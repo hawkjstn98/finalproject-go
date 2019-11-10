@@ -20,7 +20,7 @@ func GetThread(c echo.Context) (err error) {
 }
 
 func GetThreadDetail(c echo.Context) (err error){
-	m, queries := utility.GetHeader(c, "threadId|page")
+	m, queries := utility.GetHeader(c, request_constant.ThreadDetailRequest)
 	mappedReq := utility.Map(m, queries, request.ThreadDetailRequest{})
 	req, ok := mappedReq.(request.ThreadDetailRequest)
 	if !ok {
