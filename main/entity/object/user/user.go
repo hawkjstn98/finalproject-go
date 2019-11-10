@@ -2,7 +2,6 @@ package user
 
 import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/event"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 

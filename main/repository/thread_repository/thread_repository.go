@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var client = dbhealthcheck.Conf.MongoClient
@@ -57,8 +58,11 @@ func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum
 }
 
 func GetThread(id string) (result *forum.Thread, err error){
-	cursor, err := threadCollection.Find(context.Background(), bson.D{{"_id", id}})
-
+	Id, _ := primitive.ObjectIDFromHex(id)
+	log.Println(Id)
+	filter := bson.M{"_id": Id}
+	cursor, err := threadCollection.Find(context.Background(), filter)
+	log.Println(cursor)
 	if err != nil{
 		log.Println("Document Error: ", err)
 		return

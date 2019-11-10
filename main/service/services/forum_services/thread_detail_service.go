@@ -7,12 +7,14 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
+	"log"
 )
 
 func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error){
 	if req.ThreadID == ""{
 		return "", fmt.Errorf("invalid thread id")
 	}
+	log.Println("thread: ", req.ThreadID)
 	thread, err := thread_repository.GetThread(req.ThreadID)
 	if err != nil{
 		return
@@ -20,6 +22,7 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error){
 	if req.Page < 1 {
 		return "", errors.New("invalid comment paging")
 	}
+	log.Println("thread: ", thread)
 	commentStartIndex := (req.Page * 10) - ((req.Page - 1) * 10)
 	comments, err := thread_repository.GetThreadDetail(req.ThreadID)
 	if err != nil{
