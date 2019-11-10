@@ -73,6 +73,19 @@ paths:
           description: success response
           schema:
             $ref: "#/definitions/response"
+  /getEventHome:
+    get:
+      tags: Get Event Homepage
+      description: Get Data Handler
+      parameters:
+        - in: query
+          name: page
+          type: int
+      responses:
+        200: 
+          description: success response
+          schema:
+            $ref: "#/definitions/response"
 definitions:
   "response":
     "type": "object"
