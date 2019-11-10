@@ -6,6 +6,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
+	"strconv"
 )
 
 func GetThreadPage(page *request.ThreadRequest) string {
@@ -49,7 +50,8 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.Thread) {
 	return threadsPage
 }
 
-func GetMaxPage(category *request.ThreadCategoryRequest) int {
+func GetMaxPage(category *request.ThreadCategoryRequest) string {
+	category.Page = 0
 	var threads []*forum.Thread
 
 	if "" == category.Category {
@@ -59,9 +61,9 @@ func GetMaxPage(category *request.ThreadCategoryRequest) int {
 	}
 	threadsPage := MapThreadToPage(threads)
 	if len(threadsPage) % 10 == 0 {
-		return len(threadsPage)/10
+		return strconv.Itoa(len(threadsPage)/10)
 	} else {
-		return (len(threadsPage)/10) + 1
+		return strconv.Itoa((len(threadsPage)/10) + 1)
 	}
 }
 
