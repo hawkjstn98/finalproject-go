@@ -5,7 +5,6 @@ import(
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
-	"log"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 )
 
@@ -28,7 +27,6 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string{
 	start := GetStart(end)
 
 	result, _ := json.Marshal(threadsPage[int(start):end])
-	log.Println(category)
 	return string(result)
 }
 
@@ -38,7 +36,7 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.Thread) {
 		imageLink := user_repository.GetUserImage(threads[i].MakerUsername)
 
 		currThread.Id = threads[i].Id
-		currThread.Timestamp = threads[i].Timestamp
+		currThread.Timestamp = threads[i].Id.Timestamp()
 		currThread.Name = threads[i].Name
 		currThread.Category = threads[i].Category
 		currThread.MakerUsername = threads[i].MakerUsername
