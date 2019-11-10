@@ -23,7 +23,7 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 		return "", errors.New("invalid comment paging")
 	}
 	commentStartIndex := (req.Page * 10) - ((req.Page - 1) * 10)
-	comments, err := thread_repository.GetThreadDetail(req.ThreadID)
+	comments, err := thread_repository.GetCommentFromMasterID(req.ThreadID)
 	if err != nil {
 		return
 	}

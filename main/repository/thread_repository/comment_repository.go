@@ -22,7 +22,7 @@ func GetCommentCount(id string) (int) {
 	return int(cursor)
 }
 
-func GetThreadDetail(id string) (result []*forum.ObjectComment, err error) {
+func GetCommentFromMasterID(id string) (result []*forum.ObjectComment, err error) {
 	cursor, err := commentCollection.Find(context.Background(), bson.D{{"masterThreadId", id}})
 
 	if err != nil {
