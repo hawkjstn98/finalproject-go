@@ -17,7 +17,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/responseRoot"
+              "$ref": "#/definitions/response"
             }
           }
         }
@@ -31,7 +31,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/responseGetData"
+              "$ref": "#/definitions/response"
             }
           }
         }
@@ -45,7 +45,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/responseThreadPage"
+              "$ref": "#/definitions/response"
             }
           }
         }
@@ -66,7 +66,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/responseThreadCategoryPage"
+              "$ref": "#/definitions/response"
             }
           }
         }
@@ -92,7 +92,28 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/responseThreadCategoryPage"
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
+    },
+    "/getEventHome": {
+      "get": {
+        "tags": ["Get Event Homepage"],
+        "description": "Get Data Handler",
+        "parameters": [
+          {
+            "name": "page",
+            "type": "int",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
             }
           }
         }
@@ -100,34 +121,7 @@
     }
   },
   "definitions": {
-    "responseRoot": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "format": "string"
-        }
-      }
-    },
-    "responseGetData": {
-      "type": "object",
-      "properties": {
-        "res": {
-          "type": "string",
-          "format": "string"
-        }
-      }
-    },
-    "responseThreadPage": {
-      "type": "object",
-      "properties": {
-        "res": {
-          "type": "string",
-          "format": "string"
-        }
-      }
-    },
-    "responseThreadCategoryPage": {
+    "response": {
       "type": "object",
       "properties": {
         "res": {

@@ -5,6 +5,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 )
 
@@ -22,8 +23,15 @@ func GetCommentCount(id string) (int) {
 	return int(cursor)
 }
 
-func GetCommentFromMasterID(id string) (result []*forum.ObjectComment, err error) {
-	cursor, err := commentCollection.Find(context.Background(), bson.D{{"masterThreadId", id}})
+func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment, err error) {
+	limit := int64(page * 10)
+	skip := int64((page - 1) * 10)
+	option := &options.FindOptions{
+		Skip:  &skip,
+		Sort:  bson.D{{"_id", 1}},
+		Limit: &limit,
+	}
+	cursor, err := commentCollection.Find(context.Background(), bson.D{{"masterThreadId", id}}, option)
 
 	if err != nil {
 		log.Println("Document Error: ", err)
