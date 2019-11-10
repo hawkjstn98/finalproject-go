@@ -72,6 +72,32 @@
         }
       }
     },
+    "/getThreadDetail": {
+      "get": {
+        "tags": ["Get Thread Detail for Forum"],
+        "description": "Get Data Handler",
+        "parameters": [
+          {
+            "name": "threadId",
+            "type": "string",
+            "in": "header"
+          },
+          {
+            "name": "page",
+            "type": "int",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/responseThreadCategoryPage"
+            }
+          }
+        }
+      }
+    }
   },
   "definitions": {
     "responseRoot": {

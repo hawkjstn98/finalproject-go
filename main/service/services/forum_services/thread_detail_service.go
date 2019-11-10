@@ -3,12 +3,16 @@ package forum_services
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 )
 
 func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error){
+	if req.ThreadID == ""{
+		return "", fmt.Errorf("invalid thread id")
+	}
 	thread, err := thread_repository.GetThread(req.ThreadID)
 	if err != nil{
 		return
@@ -24,7 +28,6 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error){
 	commentEndIndex := len(comments) - commentStartIndex
 	if req.Page == 1 {
 		commentStartIndex -= 10
-		return
 	}
 	comments = comments[commentStartIndex : commentEndIndex]
 	var response response.ThreadDetailResponse
@@ -33,6 +36,6 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error){
 	response.Response.Message = "SUCCESS"
 	response.Response.ResponseCode = "200"
 	b, err := json.Marshal(response)
-
+	//log.Println(string(b))
 	return string(b), nil
 }
