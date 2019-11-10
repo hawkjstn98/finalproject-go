@@ -7,7 +7,6 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/forum_services"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/request_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
-	"strconv"
 )
 
 func GetThread(c echo.Context) (err error) {

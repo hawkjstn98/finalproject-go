@@ -25,13 +25,15 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 			Page:     page,
 		}
 		return req
-	} else if _, ok := reqType.(request.ThreadRequest); ok {
+	}
+	if _, ok := reqType.(request.ThreadRequest); ok {
 		page, _ := strconv.Atoi(*params[req[0]])
 		req := request.ThreadRequest{
 			Page: page,
 		}
 		return req
-	} else if _, ok := reqType.(request.ThreadCategoryRequest); ok {
+	}
+	if _, ok := reqType.(request.ThreadCategoryRequest); ok {
 		page, _ := strconv.Atoi(*params[req[1]])
 		req := request.ThreadCategoryRequest{
 			Category: *params[req[0]],
