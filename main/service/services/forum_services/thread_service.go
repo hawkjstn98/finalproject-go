@@ -28,10 +28,7 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	threadsPage := MapThreadToPage(threads)
 	log.Println(threadsPage)
 
-	end := len(threadsPage)
-	start := GetStart(end)
-
-	result, _ := json.Marshal(threadsPage[int(start):end])
+	result, _ := json.Marshal(threadsPage)
 	return string(result)
 }
 
