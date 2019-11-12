@@ -70,8 +70,8 @@ func LoginUser(req *request.LoginRequest) string {
 		response.Response.ResponseCode = "Success Login"
 	} else {
 		response.Username = msg
-		response.Response.Message = "Login Failed"
-		response.Response.ResponseCode = "Email or password not found"
+		response.Response.Message = "Email or Password Not Found"
+		response.Response.ResponseCode = "Login Failed"
 	}
 
 	result, _ := json.Marshal(response)
@@ -143,6 +143,24 @@ func GetUserData(username string) string {
 	response = usr
 
 	result, _ := json.Marshal(response)
+
+	return string(result)
+}
+
+func AddOrUpdateProfileImage(request *request.AddOrUpdateProfileImage) string {
+	respons := new(response.AddOrUpdateProfileImageResponse)
+
+	res, msg := user_repository.AddOrUpdateProfileImage(request.Username, request.ImageInString)
+
+	if res {
+		respons.Response.Message = "Add or Update profile image succes, username "+msg
+		respons.Response.ResponseCode = "SUCCESS"
+	} else {
+		respons.Response.Message = "Add or Update profile image failed, "+msg
+		respons.Response.ResponseCode = "FAILED"
+	}
+
+	result, _ := json.Marshal(respons)
 
 	return string(result)
 }
