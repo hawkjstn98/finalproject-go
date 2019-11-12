@@ -19,7 +19,7 @@ func Home(c echo.Context) error {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
 	}
 
-	res, err := event_services.GetHome(&req)
+	res, err := event_services.GetEventHome(&req)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, request_constant.InternalServerError+" "+err.Error())
 	}
