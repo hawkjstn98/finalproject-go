@@ -9,6 +9,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"strconv"
+	"log"
 )
 
 func GetThreadPage(page *request.ThreadRequest) string {
@@ -25,11 +26,9 @@ func GetThreadPage(page *request.ThreadRequest) string {
 func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	threads := thread_repository.GetThreadCategory(category)
 	threadsPage := MapThreadToPage(threads)
+	log.Println(threadsPage)
 
-	end := len(threadsPage)
-	start := GetStart(end)
-
-	result, _ := json.Marshal(threadsPage[int(start):end])
+	result, _ := json.Marshal(threadsPage)
 	return string(result)
 }
 
