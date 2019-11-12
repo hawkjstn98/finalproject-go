@@ -53,8 +53,8 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	origin := make([]string, count)
 	destinations := make([]string, count)
 	for i := 0; i < count; i++ {
-		origin[i] = usrLatitude + "|" + usrLongitude
-		destinations[i] = dataLatitude[i] + "|" + dataLongitude[i]
+		origin[i] = usrLatitude + "," + usrLongitude
+		destinations[i] = dataLatitude[i] + "," + dataLongitude[i]
 	}
 	distMatrixRequest := new(maps.DistanceMatrixRequest)
 	distMatrixRequest.Origins = origin
@@ -74,7 +74,7 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	element := new(maps.DistanceMatrixElement)
 	for i := 0; i < count; i++ {
 		element = resp.Rows[i].Elements[i]
-		distances[i] = float32(element.Distance.Meters / 1000)
+		distances[i] = float32(element.Distance.Meters) / 1000
 	}
 
 	return distances
