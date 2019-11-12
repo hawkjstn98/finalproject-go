@@ -6,6 +6,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/event"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 )
@@ -51,4 +52,26 @@ func CreateEvent(insert event.EventInsert) bool {
 
 	log.Println("event : ", insertRes)
 	return true
+}
+
+func GetEvent(id string) (result []*event.GameEvent, err error) {
+	Id, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": Id}
+	cursor, err := eventCollection.Find(context.Background(), filter)
+	if err != nil {
+		log.Println("Document Error: ", err)
+		return
+	}
+
+	if cursor.Next(context.Background()) {
+		var event event.GameEvent
+		err := cursor.Decode(&event)
+		if err != nil {
+			result = nil
+			log.Println("Data Error", err)
+			return nil, err
+		}
+		result = append(result, &event)
+	}
+	return result, nil
 }

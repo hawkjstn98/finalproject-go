@@ -8,4 +8,5 @@ import (
 func EventRouter(e *echo.Echo) {
 	e.GET("/getEventHome", event.Home)
 	e.PUT("/createEvent/:username", event.CreateEvent)
+	e.GET("/getEventDetail", event.DetailEvent)
 }
