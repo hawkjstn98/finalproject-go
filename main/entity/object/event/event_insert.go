@@ -15,8 +15,6 @@ type EventInsert struct {
 	Site            string    `json:"site" bson:"site"`
 	DateStart       time.Time `json:"dateStart" bson:"dateStart"`
 	DateEnd         time.Time `json:"dateEnd" bson:"dateEnd"`
-	StartTimeHour   int       `json:"startTimeHour" bson:"startTimeHour"`
-	StartTimeMinute int       `json:"startTimeMinute" bson:"startTimeMinute"`
 	Latitude        string    `json:"latitude" bson:"latitude"`
 	Longitude       string    `json:"longitude" bson:"longitude"`
 	Poster          string    `json:"poster" bson:"poster"`

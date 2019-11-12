@@ -76,3 +76,19 @@ func GetUserData(c echo.Context) (err error) {
 
 	return c.String(http.StatusOK, result)
 }
+
+func AddUpdateProfileImage(c echo.Context) (err error) {
+	request := new(request.AddOrUpdateProfileImage)
+
+	usrname := c.Param("username")
+
+	request.Username = usrname;
+
+	if "" == usrname {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := user_services.AddOrUpdateProfileImage()
+
+	return c.String(http.StatusOK, result)
+}

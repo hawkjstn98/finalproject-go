@@ -143,3 +143,18 @@ func GetUserData(username string) (bool, *response.UserDataResponse) {
 	}
 	return true, &user
 }
+
+func AddOrUpdateProfileImage(username string, profileImage string) (bool, string) {
+	filter := bson.M{"username": username}
+
+	update := bson.M{"$set": bson.M{"profileImage": profileImage}}
+
+	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
+
+	if doc == nil {
+		log.Println("AddOrUpdate Phone, Update Failed")
+		return false, "User Not Found"
+	}
+
+	return true, username
+}

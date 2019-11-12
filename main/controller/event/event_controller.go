@@ -36,6 +36,7 @@ func CreateEvent(c echo.Context) (err error) {
 	}
 
 	var eventInsert event.EventInsert
+
 	eventInsert.Timestamp = time.Now()
 	eventInsert.Name = r.Name
 	eventInsert.MakerUsername = usrname
@@ -46,8 +47,6 @@ func CreateEvent(c echo.Context) (err error) {
 	eventInsert.Site = r.Site
 	eventInsert.DateStart = r.DateStart
 	eventInsert.DateEnd = r.DateEnd
-	eventInsert.StartTimeHour = r.DateStart.Hour()
-	eventInsert.StartTimeMinute = r.DateStart.Minute()
 	eventInsert.Latitude = r.Latitude
 	eventInsert.Longitude = r.Longitude
 	eventInsert.Poster = r.Poster
