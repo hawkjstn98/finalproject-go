@@ -9,30 +9,36 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"strconv"
-	"log"
+	//"log"
 )
 
 func GetThreadPage(page *request.ThreadRequest) string {
 	threads, _ := thread_repository.GetThreadPage(page.Page)
 	threadsPage := MapThreadToPage(threads)
 
-	end := len(threadsPage)
-	start := GetStart(end)
+	var resp response.ThreadResponse
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	resp.Thread = threadsPage
 
-	result, _ := json.Marshal(threadsPage[int(start):end])
+	result, _ := json.Marshal(resp)
 	return string(result)
 }
 
 func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	threads := thread_repository.GetThreadCategory(category)
 	threadsPage := MapThreadToPage(threads)
-	log.Println(threadsPage)
 
-	result, _ := json.Marshal(threadsPage)
+	var resp response.ThreadResponse
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	resp.Thread = threadsPage
+
+	result, _ := json.Marshal(resp)
 	return string(result)
 }
 
-func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.Thread) {
+func MapThreadToPage(threads []*forum.Thread) (threadsPage []*forum.Thread) {
 	for i := range threads {
 		var currThread forum.Thread
 		imageLink := user_repository.GetUserImage(threads[i].MakerUsername)
@@ -46,7 +52,7 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []forum.Thread) {
 		currThread.Description = threads[i].Description
 		currThread.CommentCount = thread_repository.GetCommentCount(threads[i].Id.Hex())
 
-		threadsPage = append(threadsPage, currThread)
+		threadsPage = append(threadsPage, &currThread)
 	}
 	return threadsPage
 }

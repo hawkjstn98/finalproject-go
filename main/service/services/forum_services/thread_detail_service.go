@@ -29,7 +29,7 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	var resp response.ThreadDetailResponse
 	threads := MapThreadToPage(thread)
 	commentsPage := MapCommentToPage(comments)
-	resp.Thread = &(threads[0])
+	resp.Thread = threads[0]
 	resp.CommentList = commentsPage
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"

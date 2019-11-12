@@ -56,3 +56,18 @@ func CreateEvent(c echo.Context) (err error) {
 
 	return c.String(http.StatusOK, result)
 }
+
+func DetailEvent(c echo.Context) (err error) {
+	m, queries := utility.GetHeader(c, request_constant.EventDetailRequest)
+	mappedReq := utility.Map(m, queries, request.EventDetailRequest{})
+	req, ok := mappedReq.(request.EventDetailRequest)
+	if !ok {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	res, err := event_services.EventDetail(&req)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, request_constant.InternalServerError+" "+err.Error())
+	}
+	return c.String(http.StatusOK, res)
+}

@@ -74,7 +74,7 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	element := new(maps.DistanceMatrixElement)
 	for i := 0; i < count; i++ {
 		element = resp.Rows[i].Elements[i]
-		distances[i] = float32(element.Distance.Meters/1000)
+		distances[i] = float32(element.Distance.Meters / 1000)
 	}
 
 	return distances
@@ -86,4 +86,22 @@ func MapToEventList(events []*event.GameEvent) (eventList []*event.GameEvent) {
 		eventList = append(eventList, e)
 	}
 	return
+}
+
+func EventDetail(req *request.EventDetailRequest) (res string, err error) {
+	if req.EventId == "" {
+		return "", fmt.Errorf("invalid thread id")
+	}
+	event, err := event_repository.GetEvent(req.EventId)
+	if err != nil {
+		return
+	}
+
+	var resp response.EventDetailResponse
+	events := MapToEventList(event)
+	resp.Event = events[0]
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	b, err := json.Marshal(resp)
+	return string(b), nil
 }
