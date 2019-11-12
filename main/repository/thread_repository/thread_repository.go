@@ -17,7 +17,14 @@ var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 
 func GetThreadPage(page int) (result []*forum.Thread, err error) {
-	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, options.Find().SetLimit(int64(int(page)*10)))
+	limit := int64(page * 10)
+	skip := int64((page - 1) * 10)
+	option := &options.FindOptions{
+		Skip:  &skip,
+		Sort:  bson.D{{"_id", 1}},
+		Limit: &limit,
+	}
+	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, option)
 	if err != nil {
 		log.Println("Document Error: ", err)
 		return
@@ -38,8 +45,14 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 
 func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
 	filter := bson.M{"category": category.Category}
-	cursor, err := threadCollection.Find(context.TODO(), filter, options.Find().SetSkip(int64(int(category.Page - 1)*10)), options.Find().SetLimit(int64(int(category.Page)*10)))
-
+	limit := int64(category.Page * 10)
+	skip := int64((category.Page - 1) * 10)
+	option := &options.FindOptions{
+		Skip:  &skip,
+		Sort:  bson.D{{"_id", 1}},
+		Limit: &limit,
+	}
+	cursor, err := threadCollection.Find(context.TODO(), filter, option)
 	if err != nil {
 		log.Println("Document Error: ", err)
 		return
