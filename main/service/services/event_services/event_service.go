@@ -102,6 +102,15 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 	resp.Event = events[0]
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
-	b, err := json.Marshal(resp)
+
+	if(req.UserLatitude == "" || req.UserLongitude == ""){
+		resp.Distance = -1
+	} else {
+		var latitude, longitude []string
+		latitude = append(latitude, events[0].Latitude)
+		longitude = append(longitude, events[0].Longitude)
+		resp.Distance = CountDistance(req.UserLatitude, req.UserLongitude, latitude, longitude)[0]
+	}
+	b, _ := json.Marshal(resp)
 	return string(b), nil
 }

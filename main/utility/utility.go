@@ -51,6 +51,8 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 	if _, ok := reqType.(request.EventDetailRequest); ok {
 		req := request.EventDetailRequest{
 			EventId: *params[req[0]],
+			UserLatitude: *params[req[1]],
+			UserLongitude: *params[req[2]],
 		}
 		return req
 	}
