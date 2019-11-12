@@ -9,6 +9,8 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
+	github.com/google/uuid v1.1.1 // indirect
+	github.com/googlemaps/google-maps-services-go v0.0.0-20191014172202-ce2e58e026c5 // indirect
 	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/echo/v4 v4.1.11
 	github.com/mailru/easyjson v0.7.0 // indirect
@@ -26,6 +28,9 @@ require (
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20191029155521-f43be2a4598c // indirect
+	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c // indirect
+	googlemaps.github.io/maps v0.0.0-20191014172202-ce2e58e026c5 // indirect
+	googlemaps.github.io/maps/internal v0.0.0-20191014172202-ce2e58e026c5 // indirect
 	gopkg.in/yaml.v2 v2.2.4 // indirect
 )

@@ -40,3 +40,15 @@ func GetEventHome(page int) (result []*event.GameEvent, err error) {
 
 	return result, nil
 }
+
+func CreateEvent(insert event.EventInsert) bool {
+	insertRes, err := eventCollection.InsertOne(context.TODO(), insert)
+
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	log.Println("event : ", insertRes)
+	return true
+}
