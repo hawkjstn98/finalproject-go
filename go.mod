@@ -13,8 +13,5 @@ require (
 	go.mongodb.org/mongo-driver v1.1.3
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
-	golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c // indirect
-	googlemaps.github.io/maps v0.0.0-20191014172202-ce2e58e026c5
-	gopkg.in/yaml.v2 v2.2.4 // indirect
 	googlemaps.github.io/maps v0.0.0-20191014172202-ce2e58e026c5
 )
