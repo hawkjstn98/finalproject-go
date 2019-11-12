@@ -20,7 +20,7 @@ func Bookmark(req *request.BookmarkRequest) (res string, err error) {
 
 	double := bookmark_repository.FindBookmark(&objBookmark)
 	if double{
-		return
+		return "", fmt.Errorf("event is already bookmarked")
 	}
 	err = bookmark_repository.CreateBookmark(&objBookmark)
 	if err != nil {

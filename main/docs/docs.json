@@ -118,6 +118,52 @@
           }
         }
       }
+    },
+    "/bookmark/add": {
+      "put": {
+        "tags": ["Add Bookmark"],
+        "description": "Put Data Handler",
+        "parameters": [
+          {
+            "name": "requestBody",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/bookmarkRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
+    },
+    "/bookmark/remove": {
+      "put": {
+        "tags": ["Remove Bookmark"],
+        "description": "Put Data Handler",
+        "parameters": [
+          {
+            "name": "requestBody",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/bookmarkRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -136,6 +182,19 @@
         "res": {
           "type": "string",
           "format": "ThreadCategoryRequest"
+        }
+      }
+    },
+    "bookmarkRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "string"
+        },
+        "eventId": {
+          "type": "string",
+          "format": "string"
         }
       }
     }

@@ -35,7 +35,7 @@ func FindBookmark(req *bookmark.ObjectBookmark) bool {
 		return false
 	}
 
-	if res.EventID != "" || res.UserID != ""{
+	if req.UserID == "" || req.EventID == "" {
 		log.Println("FindBookmark : bookmark exists, ", res.EventID, " for user id, ", res.UserID)
 		return false
 	}
