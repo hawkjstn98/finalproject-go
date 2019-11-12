@@ -41,5 +41,12 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 		}
 		return req
 	}
+	if _, ok := reqType.(request.EventHomeRequest); ok {
+		page, _ := strconv.Atoi(*params[req[0]])
+		req := request.EventHomeRequest{
+			Page: page,
+		}
+		return req
+	}
 	return nil
 }

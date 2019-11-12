@@ -22,24 +22,18 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", errors.New("invalid comment paging")
 	}
-	commentStartIndex := (req.Page * 10) - ((req.Page - 1) * 10)
-	comments, err := thread_repository.GetCommentFromMasterID(req.ThreadID)
+	comments, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
 	if err != nil {
 		return
 	}
-	if req.Page == 1 {
-		commentStartIndex -= 10
-	}
-	commentEndIndex := len(comments) - commentStartIndex
-	comments = comments[commentStartIndex:commentEndIndex]
-	var response response.ThreadDetailResponse
+	var resp response.ThreadDetailResponse
 	threads := MapThreadToPage(thread)
 	commentsPage := MapCommentToPage(comments)
-	response.Thread = &(threads[0])
-	response.CommentList = commentsPage
-	response.Response.Message = "SUCCESS"
-	response.Response.ResponseCode = "200"
-	b, err := json.Marshal(response)
+	resp.Thread = &(threads[0])
+	resp.CommentList = commentsPage
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	b, err := json.Marshal(resp)
 	return string(b), nil
 }
 

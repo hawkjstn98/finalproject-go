@@ -12,6 +12,15 @@ schemes:
   - http
   - https
 paths:
+  /:
+    get:
+      tags: Hello World
+      description: Hello World
+      responses:
+        200:
+          description: success response
+          schema:
+            $ref: "#/definitions/response"
   /getData:
     get:
       tags:
@@ -21,7 +30,7 @@ paths:
         200:
           description: success response
           schema:
-            $ref: "#/definitions/responseGetData"
+            $ref: "#/definitions/response"
   /getThreadPage:
     get:
       tags:
@@ -31,7 +40,7 @@ paths:
         200:
           description: success response
           schema:
-            $ref: "#/definitions/responseThreadPage"
+            $ref: "#/definitions/response"
   /getThreadCategoryPage:
     get:
       tags:
@@ -46,7 +55,7 @@ paths:
         200:
           description: success response
           schema:
-            $ref: "#/definitions/responseThreadCategoryPage"
+            $ref: "#/definitions/response"
   /getThreadDetail:
     get:
       tags:
@@ -63,11 +72,30 @@ paths:
         200:
           description: success response
           schema:
-            $ref: "#/definitions/responseThreadCategoryPage"
+            $ref: "#/definitions/response"
+  /getEventHome:
+    get:
+      tags: Get Event Homepage
+      description: Get Data Handler
+      parameters:
+        - in: query
+          name: page
+          type: int
+      responses:
+        200: 
+          description: success response
+          schema:
+            $ref: "#/definitions/response"
 definitions:
-  requestAddFlight:
-    type: object
-    properties:
-      res:
-        type: string
-        format: string
+  "response":
+    "type": "object"
+    "properties":
+      "res":
+        "type": "string"
+        "format": "string"
+  "requestThreadCategoryPage":
+    "type": "object"
+    "properties":
+      "res":
+        "type": "string"
+        "format": "ThreadCategoryRequest"

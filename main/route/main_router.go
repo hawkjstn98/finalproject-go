@@ -13,6 +13,7 @@ func MainRouter(e *echo.Echo) {
 	e.Static("/docs", "main/docs")
 	router.UserRouter(e)
 	router.ForumRouter(e)
+	router.EventRouter(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 

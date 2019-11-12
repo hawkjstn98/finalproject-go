@@ -1,14 +1,10 @@
 package event
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-const EventCollection = "event"
-
-type GameEvent struct {
-	ID              primitive.ObjectID `json:"id" bson:"_id"`
+type EventInsert struct {
 	Timestamp       time.Time          `json:"timestamp" bson:"timestamp"`
 	Name            string             `json:"name" bson:"name"`
 	MakerUsername   string             `json:"makerusername" bson:"makerusername"`
