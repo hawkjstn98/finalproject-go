@@ -25,7 +25,7 @@ func GetEventHome(page int) (result []*event.GameEvent, err error) {
 	cursor, err := eventCollection.Find(context.TODO(), bson.D{{}}, option)
 
 	if err != nil {
-		log.Println("Document Error: ", err)
+		log.Println("GetEventHome : Document Error, ", err)
 		return
 	}
 
@@ -33,7 +33,7 @@ func GetEventHome(page int) (result []*event.GameEvent, err error) {
 		var gameEvent event.GameEvent
 		err := cursor.Decode(&gameEvent)
 		if err != nil {
-			log.Println("Data Error", err)
+			log.Println("GetEventHome : Decode Error, ", err)
 			return nil, err
 		}
 		result = append(result, &gameEvent)

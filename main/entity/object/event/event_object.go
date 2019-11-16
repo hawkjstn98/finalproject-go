@@ -22,4 +22,5 @@ type GameEvent struct {
 	Latitude      string             `json:"latitude" bson:"latitude"`
 	Longitude     string             `json:"longitude" bson:"longitude"`
 	Poster        string             `json:"poster" bson:"poster"`
+	Distance      float32            `json:"distance" bson:"distance"`
 }

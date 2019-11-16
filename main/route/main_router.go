@@ -14,6 +14,7 @@ func MainRouter(e *echo.Echo) {
 	router.UserRouter(e)
 	router.ForumRouter(e)
 	router.EventRouter(e)
+	router.BookmarkRouter(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 

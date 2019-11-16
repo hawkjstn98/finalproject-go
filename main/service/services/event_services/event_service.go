@@ -13,7 +13,7 @@ import (
 	"log"
 )
 
-func GetHome(req *request.EventHomeRequest) (res string, err error) {
+func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", fmt.Errorf("invalid paging")
 	}
@@ -22,7 +22,7 @@ func GetHome(req *request.EventHomeRequest) (res string, err error) {
 		return
 	}
 	var resp response.EventHomeResponse
-	eventList := MapToEventList(gameEvent)
+	eventList := MapToEventList(req, gameEvent)
 	resp.EventList = eventList
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
@@ -32,19 +32,19 @@ func GetHome(req *request.EventHomeRequest) (res string, err error) {
 
 func CreateEvent(req event.EventInsert) string {
 
-	response := new(response.CreateEventResponse)
+	ceResponse := new(response.CreateEventResponse)
 
 	res := event_repository.CreateEvent(req)
 
 	if res {
-		response.Response.ResponseCode = "SUCCESS"
-		response.Response.Message = "Success Creating Event"
+		ceResponse.Response.ResponseCode = "SUCCESS"
+		ceResponse.Response.Message = "Success Creating Event"
 	} else {
-		response.Response.ResponseCode = "FAILED"
-		response.Response.Message = "Failed Creating Event, Please Contact Our Customer Support : +62895348810240"
+		ceResponse.Response.ResponseCode = "FAILED"
+		ceResponse.Response.Message = "Failed Creating Event, Please Contact Our Customer Support : +62895348810240"
 	}
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(ceResponse)
 	return string(resp)
 }
 
@@ -53,8 +53,8 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	origin := make([]string, count)
 	destinations := make([]string, count)
 	for i := 0; i < count; i++ {
-		origin[i] = usrLatitude + "|" + usrLongitude
-		destinations[i] = dataLatitude[i] + "|" + dataLongitude[i]
+		origin[i] = usrLatitude + "," + usrLongitude
+		destinations[i] = dataLatitude[i] + "," + dataLongitude[i]
 	}
 	distMatrixRequest := new(maps.DistanceMatrixRequest)
 	distMatrixRequest.Origins = origin
@@ -74,15 +74,26 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	element := new(maps.DistanceMatrixElement)
 	for i := 0; i < count; i++ {
 		element = resp.Rows[i].Elements[i]
-		distances[i] = float32(element.Distance.Meters / 1000)
+		distances[i] = float32(element.Distance.Meters) / 1000
 	}
 
 	return distances
 }
 
-func MapToEventList(events []*event.GameEvent) (eventList []*event.GameEvent) {
+func MapToEventList(req *request.EventHomeRequest, events []*event.GameEvent) (eventList []*event.GameEvent) {
+	var (
+		longitudes []string
+		latitudes []string
+	)
 	for _, e := range events {
+		longitudes = append(longitudes, e.Longitude)
+		latitudes = append(latitudes, e.Latitude)
+	}
+
+	distances := CountDistance(req.Latitude, req.Longitude, latitudes, longitudes)
+	for i, e := range events {
 		e.Timestamp = e.ID.Timestamp()
+		e.Distance = distances[i]
 		eventList = append(eventList, e)
 	}
 	return
