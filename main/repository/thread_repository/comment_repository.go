@@ -24,12 +24,12 @@ func GetCommentCount(id string) (int) {
 }
 
 func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment, err error) {
-	limit := int64(page * 10)
-	skip := int64((page - 1) * 10)
+	//limit := int64(page * 10)
+	//skip := int64((page - 1) * 10)
 	option := &options.FindOptions{
-		Skip:  &skip,
+		//Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
-		Limit: &limit,
+		//Limit: &limit,
 	}
 	cursor, err := commentCollection.Find(context.Background(), bson.D{{"masterThreadId", id}}, option)
 
