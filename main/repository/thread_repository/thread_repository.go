@@ -120,7 +120,7 @@ func CreateThread(request *insert.ThreadInsert) (bool, string) {
 }
 
 func GetThreadCount(category string) (int){
-	if category == "" {
+	if category == "home" {
 		cursor, err := threadCollection.CountDocuments(context.Background(), bson.D{{}})
 		if err != nil {
 			log.Println("Document Error: ", err)

@@ -19,7 +19,7 @@ func GetThreadPage(page *request.ThreadRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
-	resp.MaxPage = GetMaxPage("")
+	resp.MaxPage = GetMaxPage("home")
 
 	result, _ := json.Marshal(resp)
 	return string(result)
