@@ -164,6 +164,29 @@
           }
         }
       }
+    },
+    "/createThreadComment": {
+      "put": {
+        "tags": ["Add Thread Comment"],
+        "description": "Put Data Handler",
+        "parameters": [
+          {
+            "name": "requestBody",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/threadCommentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -193,6 +216,35 @@
           "format": "string"
         },
         "eventId": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "threadCommentRequest": {
+      "type": "object",
+      "properties": {
+        "masterThreadId": {
+          "type": "string",
+          "format": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "string"
+        },
+        "category": {
+          "type": "string",
+          "format": "string"
+        },
+        "makerUsername": {
+          "type": "string",
+          "format": "string"
+        },
+        "makerImage": {
+          "type": "string",
+          "format": "string"
+        },
+        "description": {
           "type": "string",
           "format": "string"
         }
