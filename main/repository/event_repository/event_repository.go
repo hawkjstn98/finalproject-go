@@ -43,7 +43,7 @@ func GetEventHome(page int) (result []*event.GameEvent, maxPage int64, err error
 		result = append(result, &gameEvent)
 	}
 
-	return result, 0, nil
+	return result, maxPage, nil
 }
 
 func CreateEvent(insert event.EventInsert) bool {
