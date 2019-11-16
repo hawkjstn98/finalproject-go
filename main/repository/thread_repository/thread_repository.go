@@ -17,8 +17,14 @@ var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 
 func GetThreadPage(page int) (result []*forum.Thread, err error) {
-	limit := int64(page * 10)
-	skip := int64((page - 1) * 10)
+	var limit, skip int64
+	if(page != 0){
+		limit = int64(page * 10)
+		skip = int64((page - 1) * 10)
+	} else{
+		limit = 1000
+		skip = 0
+	}
 	option := &options.FindOptions{
 		Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
@@ -45,8 +51,15 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 
 func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
 	filter := bson.M{"category": category.Category}
-	limit := int64(category.Page * 10)
-	skip := int64((category.Page - 1) * 10)
+	var limit, skip int64
+	if(category.Page != 0){
+		limit = int64(category.Page * 10)
+		skip = int64((category.Page - 1) * 10)
+	} else{
+		limit = 1000
+		skip = 0
+	}
+
 	option := &options.FindOptions{
 		Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
