@@ -22,7 +22,7 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 		return
 	}
 	var resp response.EventHomeResponse
-	eventList := MapToEventList(req, gameEvent)
+	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvent)
 	resp.EventList = eventList
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
@@ -80,7 +80,7 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 	return distances
 }
 
-func MapToEventList(req *request.EventHomeRequest, events []*event.GameEvent) (eventList []*event.GameEvent) {
+func MapToEventList(latitude string, longitude string, events []*event.GameEvent) (eventList []*event.GameEvent) {
 	var (
 		longitudes []string
 		latitudes []string
@@ -90,7 +90,7 @@ func MapToEventList(req *request.EventHomeRequest, events []*event.GameEvent) (e
 		latitudes = append(latitudes, e.Latitude)
 	}
 
-	distances := CountDistance(req.Latitude, req.Longitude, latitudes, longitudes)
+	distances := CountDistance(latitude, longitude, latitudes, longitudes)
 	for i, e := range events {
 		e.Timestamp = e.ID.Timestamp()
 		e.Distance = distances[i]
@@ -109,7 +109,7 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 	}
 
 	var resp response.EventDetailResponse
-	events := MapToEventList(event)
+	events := MapToEventList(req.UserLatitude, req.UserLongitude, event)
 	resp.Event = events[0]
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
