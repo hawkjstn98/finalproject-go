@@ -52,5 +52,5 @@ func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment,
 		result = append(result, &comment)
 	}
 
-	return result, 0, nil
+	return result, maxPage, nil
 }
