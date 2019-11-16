@@ -1,6 +1,6 @@
 package response
 
 type LoginResponse struct{
-	Response BasicResponse `json:"response" bson:"response"`
+	Response BasicResponse
 	Username string `json:"username" bson:"username"`
 }
