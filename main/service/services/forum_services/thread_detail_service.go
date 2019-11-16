@@ -22,7 +22,7 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", errors.New("invalid comment paging")
 	}
-	comments, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
+	comments, maxPage, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
 	if err != nil {
 		return
 	}
@@ -31,6 +31,7 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	commentsPage := MapCommentToPage(comments)
 	resp.Thread = threads[0]
 	resp.CommentList = commentsPage
+	resp.MaxPage = maxPage
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	b, err := json.Marshal(resp)
