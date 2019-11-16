@@ -8,7 +8,6 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
-	"strconv"
 	//"log"
 )
 
@@ -67,11 +66,20 @@ func GetMaxPage(category *request.ThreadCategoryRequest) string {
 		threads = thread_repository.GetThreadCategory(category)
 	}
 	threadsPage := MapThreadToPage(threads)
+	var page int
 	if len(threadsPage) % 10 == 0 {
-		return strconv.Itoa(len(threadsPage)/10)
+		page = len(threadsPage)/10
 	} else {
-		return strconv.Itoa((len(threadsPage)/10) + 1)
+		page = len(threadsPage)/10 + 1
 	}
+
+	var resp response.ThreadMaxPageResponse
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	resp.Page = page
+
+	result, _ := json.Marshal(resp)
+	return string(result)
 }
 
 func GetStart(end int) (int) {
