@@ -2,6 +2,7 @@ package forum_services
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
@@ -18,7 +19,10 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	if err != nil {
 		return
 	}
-	comments, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
+	if req.Page < 1 {
+		return "", fmt.Errorf("invalid comment paging")
+	}
+	comments, maxPage, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
 	if err != nil {
 		return
 	}
@@ -27,6 +31,7 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	commentsPage := MapCommentToPage(comments)
 	resp.Thread = threads[0]
 	resp.CommentList = commentsPage
+	resp.MaxPage = maxPage
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	b, err := json.Marshal(resp)

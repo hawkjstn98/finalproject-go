@@ -23,12 +23,20 @@ func GetCommentCount(id string) (int) {
 	return int(cursor)
 }
 
-func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment, err error) {
+func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment, maxPage int64, err error) {
+	limit := int64(page * 10)
+	skip := int64((page - 1) * 10)
 	option := &options.FindOptions{
+		Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
+		Limit: &limit,
 	}
 	cursor, err := commentCollection.Find(context.Background(), bson.D{{"masterThreadId", id}}, option)
-
+	if err != nil {
+		log.Println("Document Error: ", err)
+		return
+	}
+	maxPage, err = commentCollection.CountDocuments(context.Background(), bson.D{{"masterThreadId", id}})
 	if err != nil {
 		log.Println("Document Error: ", err)
 		return
@@ -39,10 +47,10 @@ func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment,
 		err := cursor.Decode(&comment)
 		if err != nil {
 			log.Println("Data Error", err)
-			return nil, err
+			return nil, 0, err
 		}
 		result = append(result, &comment)
 	}
 
-	return result, nil
+	return result, maxPage, nil
 }

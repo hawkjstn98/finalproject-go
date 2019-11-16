@@ -1,5 +1,5 @@
 package response
 
 type AddOrUpdatePhoneResponse struct {
-	Response BasicResponse
+	Response BasicResponse `json:"response" bson:"response"`
 }
