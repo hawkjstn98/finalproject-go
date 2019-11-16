@@ -19,6 +19,7 @@ func GetThreadPage(page *request.ThreadRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
+	resp.MaxPage = GetMaxPage("")
 
 	result, _ := json.Marshal(resp)
 	return string(result)
@@ -32,6 +33,7 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
+	resp.MaxPage = GetMaxPage(category.Category)
 
 	result, _ := json.Marshal(resp)
 	return string(result)
@@ -56,30 +58,13 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []*forum.Thread) {
 	return threadsPage
 }
 
-func GetMaxPage(category *request.ThreadCategoryRequest) string {
-	category.Page = 0
-	var threads []*forum.Thread
-
-	if "" == category.Category {
-		threads, _ = thread_repository.GetThreadPage(category.Page)
+func GetMaxPage(category string) int {
+	threadCount := thread_repository.GetThreadCount(category)
+	if threadCount % 10 == 0 {
+		return threadCount/10
 	} else {
-		threads = thread_repository.GetThreadCategory(category)
+		return threadCount/10 + 1
 	}
-	threadsPage := MapThreadToPage(threads)
-	var page int
-	if len(threadsPage) % 10 == 0 {
-		page = len(threadsPage)/10
-	} else {
-		page = len(threadsPage)/10 + 1
-	}
-
-	var resp response.ThreadMaxPageResponse
-	resp.Response.Message = "SUCCESS"
-	resp.Response.ResponseCode = "200"
-	resp.Page = page
-
-	result, _ := json.Marshal(resp)
-	return string(result)
 }
 
 func GetStart(end int) (int) {
