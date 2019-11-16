@@ -1,5 +1,5 @@
 package response
 
 type CreateEventResponse struct {
-	Response BasicResponse
+	Response BasicResponse `json:"response" bson:"response"`
 }

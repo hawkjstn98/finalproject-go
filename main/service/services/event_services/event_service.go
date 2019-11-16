@@ -17,13 +17,14 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", fmt.Errorf("invalid paging")
 	}
-	gameEvent, err := event_repository.GetEventHome(req.Page)
+	gameEvent, maxPage, err := event_repository.GetEventHome(req.Page)
 	if err != nil {
 		return
 	}
 	var resp response.EventHomeResponse
 	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvent)
 	resp.EventList = eventList
+	resp.MaxPage = maxPage
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	b, err := json.Marshal(resp)

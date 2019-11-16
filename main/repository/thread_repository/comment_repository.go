@@ -36,11 +36,7 @@ func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment,
 		log.Println("Document Error: ", err)
 		return
 	}
-	countOptions := &options.CountOptions{
-		Skip:  &skip,
-		Limit: &limit,
-	}
-	maxPage, err = commentCollection.CountDocuments(context.Background(), bson.D{{"masterThreadId", id}}, countOptions)
+	maxPage, err = commentCollection.CountDocuments(context.Background(), bson.D{{"masterThreadId", id}})
 	if err != nil {
 		log.Println("Document Error: ", err)
 		return
