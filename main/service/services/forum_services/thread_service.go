@@ -8,7 +8,6 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
-	"strconv"
 	//"log"
 )
 
@@ -20,6 +19,7 @@ func GetThreadPage(page *request.ThreadRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
+	resp.MaxPage = GetMaxPage("home")
 
 	result, _ := json.Marshal(resp)
 	return string(result)
@@ -33,6 +33,7 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
+	resp.MaxPage = GetMaxPage(category.Category)
 
 	result, _ := json.Marshal(resp)
 	return string(result)
@@ -57,20 +58,12 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []*forum.Thread) {
 	return threadsPage
 }
 
-func GetMaxPage(category *request.ThreadCategoryRequest) string {
-	category.Page = 0
-	var threads []*forum.Thread
-
-	if "" == category.Category {
-		threads, _ = thread_repository.GetThreadPage(category.Page)
+func GetMaxPage(category string) int {
+	threadCount := thread_repository.GetThreadCount(category)
+	if threadCount % 10 == 0 {
+		return threadCount/10
 	} else {
-		threads = thread_repository.GetThreadCategory(category)
-	}
-	threadsPage := MapThreadToPage(threads)
-	if len(threadsPage) % 10 == 0 {
-		return strconv.Itoa(len(threadsPage)/10)
-	} else {
-		return strconv.Itoa((len(threadsPage)/10) + 1)
+		return threadCount/10 + 1
 	}
 }
 

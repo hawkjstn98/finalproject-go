@@ -17,8 +17,13 @@ var client = dbhealthcheck.Conf.MongoClient
 var threadCollection = client.Database(mongo_constant.DBName).Collection(forum.ThreadCollection)
 
 func GetThreadPage(page int) (result []*forum.Thread, err error) {
-	limit := int64(page * 10)
-	skip := int64((page - 1) * 10)
+	var limit, skip int64
+	if(page != 0){
+		limit = int64(page * 10)
+		skip = int64((page - 1) * 10)
+	} else {
+		return
+	}
 	option := &options.FindOptions{
 		Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
@@ -45,8 +50,14 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 
 func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
 	filter := bson.M{"category": category.Category}
-	limit := int64(category.Page * 10)
-	skip := int64((category.Page - 1) * 10)
+	var limit, skip int64
+	if(category.Page != 0){
+		limit = int64(category.Page * 10)
+		skip = int64((category.Page - 1) * 10)
+	} else{
+		return
+	}
+
 	option := &options.FindOptions{
 		Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
@@ -106,4 +117,26 @@ func CreateThread(request *insert.ThreadInsert) (bool, string) {
 	log.Println(res)
 
 	return true, "Success creating Thread"
+}
+
+func GetThreadCount(category string) (int){
+	if category == "home" {
+		cursor, err := threadCollection.CountDocuments(context.Background(), bson.D{{}})
+		if err != nil {
+			log.Println("Document Error: ", err)
+			return 0
+		}
+		return int(cursor)
+	} else {
+		filter := bson.M{"category": category}
+		cursor, err := threadCollection.CountDocuments(context.Background(), filter)
+		if err != nil {
+			log.Println("Document Error: ", err)
+			return 0
+		}
+		return int(cursor)
+	}
+
+
+
 }
