@@ -70,3 +70,19 @@ func CreateThread(c echo.Context) (err error) {
 
 	return c.String(http.StatusOK, result)
 }
+
+func CreateThreadComment(c echo.Context) (err error) {
+	r := new(request.CreateThreadCommentRequest)
+
+	usrname := c.Param("username")
+
+	r.MakerUsername = usrname
+
+	if err = c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := forum_services.CreateThreadComment(r)
+
+	return c.String(http.StatusOK, result)
+}
