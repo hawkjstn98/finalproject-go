@@ -19,10 +19,8 @@ func GetHeader(c echo.Context, req string) (params map[string]*string, queries [
 
 func Map(params map[string]*string, req []string, reqType interface{}) interface{} {
 	if _, ok := reqType.(request.ThreadDetailRequest); ok {
-		page, _ := strconv.Atoi(*params[req[1]])
 		req := request.ThreadDetailRequest{
 			ThreadID: *params[req[0]],
-			Page:     page,
 		}
 		return req
 	}

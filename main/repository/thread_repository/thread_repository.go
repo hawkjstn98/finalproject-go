@@ -21,9 +21,8 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 	if(page != 0){
 		limit = int64(page * 10)
 		skip = int64((page - 1) * 10)
-	} else{
-		limit = 1000
-		skip = 0
+	} else {
+		return
 	}
 	option := &options.FindOptions{
 		Skip:  &skip,
@@ -56,8 +55,7 @@ func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum
 		limit = int64(category.Page * 10)
 		skip = int64((category.Page - 1) * 10)
 	} else{
-		limit = 1000
-		skip = 0
+		return
 	}
 
 	option := &options.FindOptions{
