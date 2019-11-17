@@ -16,7 +16,8 @@ import (
 var client = dbhealthcheck.Conf.MongoClient
 var eventCollection = client.Database(mongo_constant.DBName).Collection(event.EventCollection)
 var userCollection = client.Database(mongo_constant.DBName).Collection(user.Collection)
-func GetEventHome(page int) (result []*event.GameEvent, maxPage int64, err error) {
+
+func GetEventHome(page int) (result []*event.GameEvent, count int64, err error) {
 	limit := int64(page * 10)
 	skip := int64((page - 1) * 10)
 	option := &options.FindOptions{
@@ -29,7 +30,7 @@ func GetEventHome(page int) (result []*event.GameEvent, maxPage int64, err error
 		log.Println("GetEventHome : Document Error, ", err)
 		return
 	}
-	maxPage, err = eventCollection.CountDocuments(context.Background(), bson.D{{}})
+	count, err = eventCollection.CountDocuments(context.Background(), bson.D{{}})
 	if err != nil {
 		log.Println("Document Error: ", err)
 		return
@@ -45,7 +46,7 @@ func GetEventHome(page int) (result []*event.GameEvent, maxPage int64, err error
 		result = append(result, &gameEvent)
 	}
 
-	return result, maxPage, nil
+	return result, count, nil
 }
 
 func CreateEvent(insert event.EventInsert) bool {
