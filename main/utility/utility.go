@@ -19,8 +19,10 @@ func GetHeader(c echo.Context, req string) (params map[string]*string, queries [
 
 func Map(params map[string]*string, req []string, reqType interface{}) interface{} {
 	if _, ok := reqType.(request.ThreadDetailRequest); ok {
+		paging, _ := strconv.ParseInt(*params[req[1]], 10, 64)
 		req := request.ThreadDetailRequest{
 			ThreadID: *params[req[0]],
+			Page: paging,
 		}
 		return req
 	}
