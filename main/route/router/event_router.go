@@ -9,4 +9,5 @@ func EventRouter(e *echo.Echo) {
 	e.GET("/getEventHome", event.Home)
 	e.PUT("/createEvent/:username", event.CreateEvent)
 	e.GET("/getEventDetail", event.DetailEvent)
+	e.GET("/getMyEvent/:username/:latitude/:longitude", event.MyEvent)
 }

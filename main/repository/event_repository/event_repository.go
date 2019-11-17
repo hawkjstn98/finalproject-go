@@ -2,6 +2,7 @@ package event_repository
 
 import (
 	"context"
+	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/event"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/user"
@@ -82,6 +83,8 @@ func CreateEvent(insert event.EventInsert) bool {
 	gameEvent.Timestamp = time.Now()
 	gameEvent.Site = insert.Site
 	gameEvent.Category = insert.Category
+	var x interface{} = insertRes.InsertedID
+	gameEvent.ID = x.(primitive.ObjectID)
 	user.EventList = append(user.EventList, gameEvent)
 	update := bson.M{"$set": bson.M{"eventList": user.EventList}}
 	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
@@ -112,4 +115,18 @@ func GetEvent(id string) (result []*event.GameEvent, err error) {
 		result = append(result, &event)
 	}
 	return result, nil
+}
+
+func MyEvent(username string) (event []event.GameEvent, message string, status bool) {
+	var user user.User
+	filter := bson.M{"username": username}
+
+	err := userCollection.FindOne(context.TODO(), filter).Decode(&user)
+
+	if err != nil {
+		fmt.Println("User Not Found")
+		return nil, "User Not Found", false
+	}
+
+	return user.EventList, "Success Find user Event", true
 }
