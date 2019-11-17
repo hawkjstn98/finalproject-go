@@ -2,8 +2,8 @@ package forum_services
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/insert"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
@@ -53,4 +53,34 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 		commentsPage = append(commentsPage, &currComment)
 	}
 	return commentsPage
+}
+
+func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) string {
+	response := new(response.CreateThreadCommentResponse)
+
+	if "" == threadRequest.MakerUsername || "" == threadRequest.Name || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
+		response.Response.Message = "Invalid Request Format"
+		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
+	}
+
+	var thread = new(insert.ThreadCommentInsert)
+	thread.MasterThreadID = threadRequest.MasterThreadID
+	thread.Timestamp = threadRequest.Timestamp
+	thread.Description = threadRequest.Description
+	thread.Category = threadRequest.Category
+	thread.MakerUsername = threadRequest.MakerUsername
+
+	res, msg := thread_repository.CreateThreadComment(thread)
+
+	if res {
+		response.Response.Message = msg
+		response.Response.ResponseCode = "Create Thread Comment Success"
+	} else {
+		response.Response.Message = "Create Thread Comment failed, " + msg
+		response.Response.ResponseCode = "Create Thread Comment Failed"
+	}
+
+	result, _ := json.Marshal(response)
+	return string(result)
+
 }
