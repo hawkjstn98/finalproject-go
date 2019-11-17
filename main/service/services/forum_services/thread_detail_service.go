@@ -2,13 +2,13 @@ package forum_services
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
+	"math"
 )
 
 func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
@@ -22,9 +22,15 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", fmt.Errorf("invalid comment paging")
 	}
-	comments, maxPage, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
+	comments, count, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
 	if err != nil {
 		return
+	}
+	page := float64(count / 10)
+	page = math.Floor(page)
+	maxPage := int64(page)
+	if count % 10 > 0 {
+		maxPage = maxPage + 1
 	}
 	var resp response.ThreadDetailResponse
 	threads := MapThreadToPage(thread)

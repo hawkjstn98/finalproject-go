@@ -11,15 +11,22 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/event_repository"
 	"googlemaps.github.io/maps"
 	"log"
+	"math"
 )
 
 func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", fmt.Errorf("invalid paging")
 	}
-	gameEvent, maxPage, err := event_repository.GetEventHome(req.Page)
+	gameEvent, count, err := event_repository.GetEventHome(req.Page)
 	if err != nil {
 		return
+	}
+	page := float64(count / 10)
+	page = math.Floor(page)
+	maxPage := int64(page)
+	if count % 10 > 0 {
+		maxPage = maxPage + 1
 	}
 	var resp response.EventHomeResponse
 	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvent)
