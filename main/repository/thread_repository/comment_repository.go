@@ -24,7 +24,7 @@ func GetCommentCount(id string) (int) {
 	return int(cursor)
 }
 
-func GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectComment, maxPage int64, err error) {
+func GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectComment, count int64, err error) {
 	limit := page * 10
 	skip := (page - 1) * 10
 	option := &options.FindOptions{
@@ -37,7 +37,7 @@ func GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectCommen
 		log.Println("Document Error: ", err)
 		return
 	}
-	maxPage, err = commentCollection.CountDocuments(context.Background(), bson.D{{"masterThreadId", id}})
+	count, err = commentCollection.CountDocuments(context.Background(), bson.D{{"masterThreadId", id}})
 	if err != nil {
 		log.Println("Document Error: ", err)
 		return
@@ -53,7 +53,7 @@ func GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectCommen
 		result = append(result, &comment)
 	}
 
-	return result, maxPage, nil
+	return result, count, nil
 }
 
 func CreateThreadComment(request *insert.ThreadCommentInsert) (bool, string) {

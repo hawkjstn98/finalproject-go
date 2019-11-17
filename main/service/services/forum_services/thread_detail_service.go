@@ -9,6 +9,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
+	"math"
 )
 
 func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
@@ -22,9 +23,15 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", fmt.Errorf("invalid comment paging")
 	}
-	comments, maxPage, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
+	comments, count, err := thread_repository.GetCommentFromMasterID(req.ThreadID, req.Page)
 	if err != nil {
 		return
+	}
+	page := float64(count / 10)
+	page = math.Floor(page)
+	maxPage := int64(page)
+	if count % 10 > 0 {
+		maxPage = maxPage + 1
 	}
 	var resp response.ThreadDetailResponse
 	threads := MapThreadToPage(thread)
@@ -58,7 +65,7 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) string {
 	response := new(response.CreateThreadCommentResponse)
 
-	if "" == threadRequest.MakerUsername || "" == threadRequest.Name || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
+	if "" == threadRequest.MakerUsername || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
 		response.Response.Message = "Invalid Request Format"
 		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
 	}
