@@ -3,6 +3,7 @@ package thread_repository
 import (
 	"context"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/insert"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,9 +24,9 @@ func GetCommentCount(id string) (int) {
 	return int(cursor)
 }
 
-func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment, count int64, err error) {
-	limit := int64(page * 10)
-	skip := int64((page - 1) * 10)
+func GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectComment, count int64, err error) {
+	limit := page * 10
+	skip := (page - 1) * 10
 	option := &options.FindOptions{
 		Skip:  &skip,
 		Sort:  bson.D{{"_id", 1}},
@@ -53,4 +54,18 @@ func GetCommentFromMasterID(id string, page int) (result []*forum.ObjectComment,
 	}
 
 	return result, count, nil
+}
+
+func CreateThreadComment(request *insert.ThreadCommentInsert) (bool, string) {
+
+	res, err := threadCollection.InsertOne(context.TODO(), request)
+
+	if err != nil {
+		log.Println(err)
+		return false, "Failed To Create Thread Comment to DB"
+	}
+
+	log.Println(res)
+
+	return true, "Success creating Thread Comment"
 }

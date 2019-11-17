@@ -3,6 +3,7 @@ package forum_services
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/insert"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"

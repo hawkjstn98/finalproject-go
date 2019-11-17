@@ -8,3 +8,7 @@ type ThreadDetailResponse struct {
 	CommentList []*forum.ObjectComment `json:"commentList" bson:"commentList"`
 	MaxPage     int64                  `json:"maxPage" bson:"maxPage"`
 }
+
+type CreateThreadCommentResponse struct {
+	Response BasicResponse `json:"response" bson:"response"`
+}

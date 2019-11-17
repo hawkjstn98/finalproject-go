@@ -19,8 +19,10 @@ func GetHeader(c echo.Context, req string) (params map[string]*string, queries [
 
 func Map(params map[string]*string, req []string, reqType interface{}) interface{} {
 	if _, ok := reqType.(request.ThreadDetailRequest); ok {
+		paging, _ := strconv.ParseInt(*params[req[1]], 10, 64)
 		req := request.ThreadDetailRequest{
 			ThreadID: *params[req[0]],
+			Page: paging,
 		}
 		return req
 	}
@@ -43,6 +45,8 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 		page, _ := strconv.Atoi(*params[req[0]])
 		req := request.EventHomeRequest{
 			Page: page,
+			Latitude: *params[req[1]],
+			Longitude: *params[req[2]],
 		}
 		return req
 	}
