@@ -4,16 +4,18 @@ import (
 	"context"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/event"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/user"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"time"
 )
 
 var client = dbhealthcheck.Conf.MongoClient
 var eventCollection = client.Database(mongo_constant.DBName).Collection(event.EventCollection)
-
+var userCollection = client.Database(mongo_constant.DBName).Collection(user.Collection)
 func GetEventHome(page int) (result []*event.GameEvent, maxPage int64, err error) {
 	limit := int64(page * 10)
 	skip := int64((page - 1) * 10)
@@ -47,6 +49,14 @@ func GetEventHome(page int) (result []*event.GameEvent, maxPage int64, err error
 }
 
 func CreateEvent(insert event.EventInsert) bool {
+	var user user.User
+	filter := bson.M{"username": insert.MakerUsername}
+
+	err1 := userCollection.FindOne(context.TODO(), filter).Decode(&user)
+	if err1 != nil{
+		return false
+	}
+
 	insertRes, err := eventCollection.InsertOne(context.TODO(), insert)
 
 	if err != nil {
@@ -55,6 +65,29 @@ func CreateEvent(insert event.EventInsert) bool {
 	}
 
 	log.Println("event : ", insertRes)
+
+	var gameEvent event.GameEvent
+	gameEvent.MakerUsername = insert.MakerUsername
+	gameEvent.Distance = 0
+	gameEvent.Poster = insert.Poster
+	gameEvent.Longitude = insert.Longitude
+	gameEvent.Latitude = insert.Latitude
+	gameEvent.DateEnd = insert.DateEnd
+	gameEvent.DateStart = insert.DateStart
+	gameEvent.Description = insert.Description
+	gameEvent.Type = insert.Type
+	gameEvent.Games = insert.Games
+	gameEvent.Name = insert.Name
+	gameEvent.Timestamp = time.Now()
+	gameEvent.Site = insert.Site
+	gameEvent.Category = insert.Category
+	user.EventList = append(user.EventList, gameEvent)
+	update := bson.M{"$set": bson.M{"eventList": user.EventList}}
+	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
+	if doc == nil {
+		log.Println("AddOrUpdate, Update Failed")
+		return false
+	}
 	return true
 }
 

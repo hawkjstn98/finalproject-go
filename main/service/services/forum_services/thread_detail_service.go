@@ -58,7 +58,7 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) string {
 	response := new(response.CreateThreadCommentResponse)
 
-	if "" == threadRequest.MakerUsername || "" == threadRequest.Name || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
+	if "" == threadRequest.MakerUsername || "" == threadRequest.MakerUsername || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
 		response.Response.Message = "Invalid Request Format"
 		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
 	}
