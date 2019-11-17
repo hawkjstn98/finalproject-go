@@ -45,6 +45,8 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 		page, _ := strconv.Atoi(*params[req[0]])
 		req := request.EventHomeRequest{
 			Page: page,
+			Latitude: *params[req[1]],
+			Longitude: *params[req[2]],
 		}
 		return req
 	}
