@@ -25,7 +25,7 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	page := float64(count / 10)
 	page = math.Floor(page)
 	maxPage := int64(page)
-	if count % 10 > 0 {
+	if count%10 > 0 {
 		maxPage = maxPage + 1
 	}
 	var resp response.EventHomeResponse
@@ -91,7 +91,7 @@ func CountDistance(usrLatitude string, usrLongitude string, dataLatitude []strin
 func MapToEventList(latitude string, longitude string, events []*event.GameEvent) (eventList []*event.GameEvent) {
 	var (
 		longitudes []string
-		latitudes []string
+		latitudes  []string
 	)
 	for _, e := range events {
 		longitudes = append(longitudes, e.Longitude)
@@ -122,7 +122,7 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 
-	if(req.UserLatitude == "" || req.UserLongitude == ""){
+	if req.UserLatitude == "" || req.UserLongitude == "" {
 		resp.Distance = -1
 	} else {
 		var latitude, longitude []string
@@ -132,4 +132,37 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 	}
 	b, _ := json.Marshal(resp)
 	return string(b), nil
+}
+
+func MyEventService(req *request.MyEventRequest) string {
+	resp := new(response.MyEventResponse)
+
+	res, msg, status := event_repository.MyEvent(req.Username)
+
+	if !status {
+		resp.Response.ResponseCode = "FAILED FETCH MY EVENT"
+		resp.Response.Message = msg
+		resp.EventList = nil
+	}
+
+	resp.Response.ResponseCode = "SUCCESS FETCH MY EVENT"
+	resp.Response.Message = msg
+
+	var latitude []string
+	var longitude []string
+
+	for i := 0; i < len(res); i++ {
+		latitude = append(latitude, res[i].Latitude)
+		longitude = append(longitude, res[i].Longitude)
+	}
+
+	dist := CountDistance(req.Latitude, req.Longitude, latitude, longitude)
+
+	for i := 0; i < len(dist); i++ {
+		res[i].Distance = dist[i]
+	}
+	resp.EventList = res
+
+	responses, _ := json.Marshal(resp)
+	return string(responses)
 }

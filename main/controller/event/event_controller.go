@@ -70,3 +70,26 @@ func DetailEvent(c echo.Context) (err error) {
 	}
 	return c.String(http.StatusOK, res)
 }
+
+func MyEvent(c echo.Context) (err error) {
+	username := c.Param("username")
+	latitude := c.Param("latitude")
+	longitude := c.Param("longitude")
+
+	req := new(request.MyEventRequest)
+	req.Username = username
+	req.Latitude = latitude
+	req.Longitude = longitude
+
+	if err = c.Bind(req); err != nil {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	if req.Username == "" || req.Latitude == "" || req.Longitude == "" {
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	res := event_services.MyEventService(req)
+
+	return c.String(http.StatusOK, res)
+}
