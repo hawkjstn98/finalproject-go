@@ -55,6 +55,10 @@ func SearchEvent(req *request.SearchEventRequest) string {
 	if err != nil {
 		return ""
 	}
+
+	if len(gameEvents) < 0 || gameEvents == nil {
+		return "No Event with this name available"
+	}
 	for i, gameEvent := range gameEvents{
 		img, err := user_repository.GetUserImage(gameEvent.MakerUsername)
 		if err != nil {

@@ -29,6 +29,10 @@ func GetThreadPage(page *request.ThreadRequest) string {
 
 func GetSearchPage(request *request.SearchThreadRequest) string {
 	threads, _ := thread_repository.GetSearchPage(request.Page, request.SearchKey)
+
+	if len(threads) < 1 || threads == nil {
+		return "No Thread Available with this search"
+	}
 	threadWithPage := MapThreadToPage(threads)
 
 	var resp response.SearchThreadResponse
