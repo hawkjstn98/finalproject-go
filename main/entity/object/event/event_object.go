@@ -11,7 +11,6 @@ type GameEvent struct {
 	ID            primitive.ObjectID `json:"id" bson:"_id"`
 	Timestamp     time.Time          `json:"timestamp" bson:"timestamp"`
 	Name          string             `json:"name" bson:"name"`
-	MakerUsername string             `json:"makerusername" bson:"makerusername"`
 	Type          string             `json:"type" bson:"type"`
 	Games         []string           `json:"games" bson:"games"`
 	Category      []string           `json:"category" bson:"category"`
@@ -23,4 +22,6 @@ type GameEvent struct {
 	Longitude     string             `json:"longitude" bson:"longitude"`
 	Poster        string             `json:"poster" bson:"poster"`
 	Distance      float32            `json:"distance" bson:"distance"`
+	MakerUsername string             `json:"makerusername" bson:"makerusername"`
+	MakerImage    string             `json:"makerImage" bson:"makerImage"`
 }

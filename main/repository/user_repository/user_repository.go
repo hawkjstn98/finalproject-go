@@ -90,13 +90,17 @@ func UserLogin(email string, password string) (bool, string) {
 	return true, user.Username
 }
 
-func GetUserImage(username string) string {
+func GetUserImage(username string) (string, error) {
 	filter := bson.M{"username": username}
 	var userThread user.User
 	ctx := context.Background()
 	cursorUser := userCollection.FindOne(ctx, filter)
-	cursorUser.Decode(&userThread)
-	return userThread.ProfileImage
+	err := cursorUser.Decode(&userThread)
+	if err != nil {
+		log.Println("Unable to find user's image : ", err)
+		return "", nil
+	}
+	return userThread.ProfileImage, nil
 }
 
 func AddOrUpdateGameList(username string, gameList [] string) (bool, string, interface{}) {
