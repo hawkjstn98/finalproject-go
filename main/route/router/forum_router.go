@@ -10,5 +10,5 @@ func ForumRouter(e *echo.Echo) {
 	e.GET("/getThreadDetail", forumController.GetThreadDetail)
 	e.GET("/getThreadCategoryPage", forumController.GetThreadCategory)
 	e.PUT("/createThread/:username", forumController.CreateThread)
-	e.PUT("/createThread/:username", forumController.CreateThreadComment)
+	e.PUT("/createComment/:username", forumController.CreateThreadComment)
 }
