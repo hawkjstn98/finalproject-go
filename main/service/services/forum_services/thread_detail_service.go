@@ -9,6 +9,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/thread_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
+	"log"
 	"math"
 )
 
@@ -48,8 +49,10 @@ func GetThreadDetail(req *request.ThreadDetailRequest) (res string, err error) {
 func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.ObjectComment) {
 	for i := range comments {
 		var currComment forum.ObjectComment
-		imageLink := user_repository.GetUserImage(comments[i].Username)
-
+		imageLink, err := user_repository.GetUserImage(comments[i].Username)
+		if err != nil{
+			log.Println(err)
+		}
 		currComment.Id = comments[i].Id
 		currComment.ThreadMasterID = comments[i].ThreadMasterID
 		currComment.Timestamp = comments[i].Id.Timestamp()

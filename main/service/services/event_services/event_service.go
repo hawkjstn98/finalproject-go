@@ -9,6 +9,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/event_repository"
+	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"googlemaps.github.io/maps"
 	"log"
 	"math"
@@ -18,9 +19,16 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	if req.Page < 1 {
 		return "", fmt.Errorf("invalid paging")
 	}
-	gameEvent, count, err := event_repository.GetEventHome(req.Page)
+	gameEvents, count, err := event_repository.GetEventHome(req.Page)
 	if err != nil {
 		return
+	}
+	for i, gameEvent := range gameEvents{
+		img, err := user_repository.GetUserImage(gameEvent.MakerUsername)
+		if err != nil {
+			log.Println(err)
+		}
+		gameEvents[i].MakerImage = img
 	}
 	page := float64(count / 10)
 	page = math.Floor(page)
@@ -29,7 +37,7 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 		maxPage = maxPage + 1
 	}
 	var resp response.EventHomeResponse
-	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvent)
+	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvents)
 	resp.EventList = eventList
 	resp.MaxPage = maxPage
 	resp.Response.Message = "SUCCESS"
