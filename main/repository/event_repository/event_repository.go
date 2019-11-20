@@ -50,6 +50,45 @@ func GetEventHome(page int) (result []*event.GameEvent, count int64, err error) 
 	return result, count, nil
 }
 
+func SearchEvent(page int, key string) (result []*event.GameEvent, count int64, err error)  {
+	limit := int64(page * 10)
+	skip := int64((page - 1) * 10)
+	option := &options.FindOptions{
+		Skip:  &skip,
+		Sort:  bson.D{{"_id", 1}},
+		Limit: &limit,
+	}
+
+	filter := bson.M{"name": primitive.Regex{Pattern: "^"+key, Options: "i"}}
+
+	cursor, err := eventCollection.Find(context.TODO(), filter, option)
+
+	if err != nil {
+		log.Println("Document Error: ", err)
+		return
+	}
+
+	count, err = eventCollection.CountDocuments(context.Background(), filter)
+
+	if err != nil {
+		log.Println("Document Error: ", err)
+		return
+	}
+
+
+	for cursor.Next(context.Background()) {
+		var gameEvent event.GameEvent
+		err := cursor.Decode(&gameEvent)
+		if err != nil {
+			log.Println("GetEventHome : Decode Error, ", err)
+			return nil, 0, err
+		}
+		result = append(result, &gameEvent)
+	}
+
+	return result, count, nil
+}
+
 func CreateEvent(insert event.EventInsert) bool {
 	var user user.User
 	filter := bson.M{"username": insert.MakerUsername}

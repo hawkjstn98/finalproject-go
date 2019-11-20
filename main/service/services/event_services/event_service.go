@@ -46,6 +46,39 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	return string(b), nil
 }
 
+func SearchEvent(req *request.SearchEventRequest) string {
+	if req.Page < 1 {
+		return "Pagination Error, page cannot be 1"
+	}
+	gameEvents, count, err := event_repository.SearchEvent(req.Page, req.SearchKey)
+
+	if err != nil {
+		return ""
+	}
+	for i, gameEvent := range gameEvents{
+		img, err := user_repository.GetUserImage(gameEvent.MakerUsername)
+		if err != nil {
+			log.Println(err)
+		}
+		gameEvents[i].MakerImage = img
+	}
+	page := float64(count / 10)
+	page = math.Floor(page)
+	maxPage := int64(page)
+	if count%10 > 0 {
+		maxPage = maxPage + 1
+	}
+	var resp response.EventHomeResponse
+	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvents)
+	resp.EventList = eventList
+	resp.MaxPage = maxPage
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	results, err := json.Marshal(resp)
+
+	return string(results)
+}
+
 func CreateEvent(req event.EventInsert) string {
 
 	ceResponse := new(response.CreateEventResponse)
