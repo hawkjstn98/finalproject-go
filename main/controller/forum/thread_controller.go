@@ -7,6 +7,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/forum_services"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/request_constant"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
+	"strconv"
 )
 
 func GetThread(c echo.Context) (err error) {
@@ -83,6 +84,29 @@ func CreateThreadComment(c echo.Context) (err error) {
 	}
 
 	result := forum_services.CreateThreadComment(r)
+
+	return c.String(http.StatusOK, result)
+}
+
+func SearchThread(c echo.Context) (err error){
+	r := new(request.SearchThreadRequest)
+
+	usrname := c.Param("username")
+	search  := c.Param("searchKey")
+	page 	:= c.Param("page")
+
+	r.SearchKey = search
+	r.Username  = usrname
+	r.Page,err = strconv.Atoi(page)
+
+	if err != nil {
+		if err = c.Bind(r); err != nil {
+			return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+		}
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := forum_services.GetSearchPage(r)
 
 	return c.String(http.StatusOK, result)
 }

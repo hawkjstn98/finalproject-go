@@ -11,4 +11,5 @@ func ForumRouter(e *echo.Echo) {
 	e.GET("/getThreadCategoryPage", forumController.GetThreadCategory)
 	e.PUT("/createThread/:username", forumController.CreateThread)
 	e.PUT("/createComment/:username", forumController.CreateThreadComment)
+	e.GET("/searchThread/:username/:searchKey/:page", forumController.SearchThread)
 }

@@ -21,7 +21,21 @@ func GetThreadPage(page *request.ThreadRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
-	resp.MaxPage = GetMaxPage("home")
+	resp.MaxPage = GetMaxPage("home", "")
+
+	result, _ := json.Marshal(resp)
+	return string(result)
+}
+
+func GetSearchPage(request *request.SearchThreadRequest) string {
+	threads, _ := thread_repository.GetSearchPage(request.Page, request.SearchKey)
+	threadWithPage := MapThreadToPage(threads)
+
+	var resp response.SearchThreadResponse
+	resp.Response.Message = "SUCCESS"
+	resp.Response.ResponseCode = "200"
+	resp.Thread = threadWithPage
+	resp.MaxPage = GetMaxPage("", request.SearchKey)
 
 	result, _ := json.Marshal(resp)
 	return string(result)
@@ -35,7 +49,7 @@ func GetThreadCategoryPage(category *request.ThreadCategoryRequest) string {
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
 	resp.Thread = threadsPage
-	resp.MaxPage = GetMaxPage(category.Category)
+	resp.MaxPage = GetMaxPage(category.Category, "")
 
 	result, _ := json.Marshal(resp)
 	return string(result)
@@ -62,8 +76,13 @@ func MapThreadToPage(threads []*forum.Thread) (threadsPage []*forum.Thread) {
 	return threadsPage
 }
 
-func GetMaxPage(category string) int {
-	threadCount := thread_repository.GetThreadCount(category)
+func GetMaxPage(category string, key string) int {
+	var threadCount int
+	if key != "" {
+		threadCount = thread_repository.GetSearchCount(key)
+	} else {
+		threadCount = thread_repository.GetThreadCount(category)
+	}
 	if threadCount % 10 == 0 {
 		return threadCount/10
 	} else {

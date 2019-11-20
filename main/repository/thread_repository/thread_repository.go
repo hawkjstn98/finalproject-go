@@ -48,6 +48,42 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 	return result, nil
 }
 
+func GetSearchPage(page int, searchKey string) (result []*forum.Thread, err error) {
+	var limit, skip int64
+	if(page != 0){
+		limit = int64(page * 10)
+		skip = int64((page - 1) * 10)
+	} else {
+		return
+	}
+
+	option := &options.FindOptions{
+		Skip:  &skip,
+		Sort:  bson.D{{"_id", 1}},
+		Limit: &limit,
+	}
+
+	filter := bson.M{"name": primitive.Regex{Pattern: "^"+searchKey, Options: "i"}}
+
+	cursor, err := threadCollection.Find(context.Background(), filter, option)
+	if err != nil {
+		log.Println("Document Error: ", err)
+		return
+	}
+
+	for cursor.Next(context.Background()) {
+		var thread forum.Thread
+		err := cursor.Decode(&thread)
+		if err != nil {
+			log.Println("Data Error", err)
+			return nil, err
+		}
+		result = append(result, &thread)
+	}
+
+	return result, nil
+}
+
 func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum.Thread) {
 	filter := bson.M{"category": category.Category}
 	var limit, skip int64
@@ -136,7 +172,17 @@ func GetThreadCount(category string) (int){
 		}
 		return int(cursor)
 	}
+}
 
+func GetSearchCount(key string) int {
+	filter := bson.M{"name": primitive.Regex{Pattern: "^"+key, Options: "i"}}
 
+	cursor, err := threadCollection.CountDocuments(context.Background(), filter)
 
+	if err != nil {
+		log.Println("Thread Collection Error")
+		return 0
+	}
+
+	return int(cursor)
 }
