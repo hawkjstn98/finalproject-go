@@ -8,6 +8,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/utility"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -92,4 +93,31 @@ func MyEvent(c echo.Context) (err error) {
 	res := event_services.MyEventService(req)
 
 	return c.String(http.StatusOK, res)
+}
+
+func SearchEvent(c echo.Context) (err error) {
+	r := new(request.SearchEventRequest)
+
+	usrname   := c.Param("username")
+	search    := c.Param("searchKey")
+	page 	  := c.Param("page")
+	latitude  := c.Param("latitude")
+	longitude := c.Param("longitude")
+
+	r.SearchKey = search
+	r.Username  = usrname
+	r.Page,err = strconv.Atoi(page)
+	r.Latitude = latitude
+	r.Longitude = longitude
+
+	if err != nil {
+		if err = c.Bind(r); err != nil {
+			return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+		}
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
+
+	result := event_services.SearchEvent(r)
+
+	return c.String(http.StatusOK, result)
 }
