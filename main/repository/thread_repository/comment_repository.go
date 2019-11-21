@@ -58,14 +58,13 @@ func GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectCommen
 
 func CreateThreadComment(request *insert.ThreadCommentInsert) (bool, string) {
 
-	res, err := threadCollection.InsertOne(context.TODO(), request)
+	res, err := commentCollection.InsertOne(context.TODO(), request)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Error Inserting to DB: ", err)
 		return false, "Failed To Create Thread Comment to DB"
 	}
 
-	log.Println(res)
-
+	log.Println("Query Result: ", res)
 	return true, "Success creating Thread Comment"
 }
