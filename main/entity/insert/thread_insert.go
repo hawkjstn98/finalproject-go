@@ -13,9 +13,7 @@ type ThreadInsert struct {
 }
 
 type ThreadCommentInsert struct {
-	MasterThreadID string    `json:"masterThreadId" bson:"masterThreadId"`
-	Timestamp      time.Time `json:"timestamp" bson:"timestamp"`
-	Category       string    `json:"category" bson:"category"`
-	MakerUsername  string    `json:"makerUsername" bson:"makerUsername"`
-	Description    string    `json:"description" bson:"description"`
+	MasterThreadID string `json:"masterThreadId" bson:"masterThreadId"`
+	Username       string `json:"username" bson:"username"`
+	ThreadComment  string `json:"threadComment" bson:"threadComment"`
 }
