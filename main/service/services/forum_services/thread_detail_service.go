@@ -85,8 +85,19 @@ func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) stri
 	thread.Category = threadRequest.Category
 	thread.MakerUsername = threadRequest.MakerUsername
 
-	resp, msg := thread_repository.CreateThreadComment(thread)
+	threads, err := thread_repository.GetThread(thread.MasterThreadID)
+	if err != nil || threads == nil{
+		res.Response.Message = "Create Thread Comment failed, Master Thread Not Found"
+		res.Response.ResponseCode = "Create Thread Comment Failed"
+		log.Println("Master Thread Not Found ", err)
+		result, err := json.Marshal(res)
+		if err != nil{
+			log.Println("Error Marshal ", err)
+		}
+		return string(result)
+	}
 
+	resp, msg := thread_repository.CreateThreadComment(thread)
 	if resp {
 		res.Response.Message = msg
 		res.Response.ResponseCode = "Create Thread Comment Success"
