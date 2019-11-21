@@ -54,7 +54,7 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 			log.Println(err)
 		}
 		currComment.Id = comments[i].Id
-		currComment.ThreadMasterID = comments[i].ThreadMasterID
+		currComment.MasterThreadID = comments[i].MasterThreadID
 		currComment.Timestamp = comments[i].Id.Timestamp()
 		currComment.Username = comments[i].Username
 		currComment.ProfileImage = imageLink
@@ -68,7 +68,7 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) string {
 	res := new(response.CreateThreadCommentResponse)
 
-	if "" == threadRequest.MasterThreadID || "" == threadRequest.MakerUsername || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
+	if "" == threadRequest.MasterThreadID || "" == threadRequest.MakerUsername || "" == threadRequest.ThreadComment {
 		res.Response.Message = "Invalid Request Format"
 		res.Response.ResponseCode = "Failed To Create Comment"
 		result, err := json.Marshal(res)
@@ -80,10 +80,8 @@ func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) stri
 
 	var thread = new(insert.ThreadCommentInsert)
 	thread.MasterThreadID = threadRequest.MasterThreadID
-	thread.Timestamp = threadRequest.Timestamp
-	thread.Description = threadRequest.Description
-	thread.Category = threadRequest.Category
-	thread.MakerUsername = threadRequest.MakerUsername
+	thread.ThreadComment = threadRequest.ThreadComment
+	thread.Username = threadRequest.MakerUsername
 
 	threads, err := thread_repository.GetThread(thread.MasterThreadID)
 	if err != nil || threads == nil{
