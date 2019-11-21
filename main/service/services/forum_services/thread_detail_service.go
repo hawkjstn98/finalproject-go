@@ -54,7 +54,7 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 			log.Println(err)
 		}
 		currComment.Id = comments[i].Id
-		currComment.ThreadMasterID = comments[i].ThreadMasterID
+		currComment.MasterThreadID = comments[i].MasterThreadID
 		currComment.Timestamp = comments[i].Id.Timestamp()
 		currComment.Username = comments[i].Username
 		currComment.ProfileImage = imageLink
@@ -66,31 +66,47 @@ func MapCommentToPage(comments []*forum.ObjectComment) (commentsPage []*forum.Ob
 }
 
 func CreateThreadComment(threadRequest *request.CreateThreadCommentRequest) string {
-	response := new(response.CreateThreadCommentResponse)
+	res := new(response.CreateThreadCommentResponse)
 
-	if "" == threadRequest.MakerUsername || "" == threadRequest.Category || "" == threadRequest.Description || threadRequest.Timestamp.IsZero() {
-		response.Response.Message = "Invalid Request Format"
-		response.Response.ResponseCode = "Failed To Add Or Update PhoneNumber"
+	if "" == threadRequest.MasterThreadID || "" == threadRequest.MakerUsername || "" == threadRequest.ThreadComment {
+		res.Response.Message = "Invalid Request Format"
+		res.Response.ResponseCode = "Failed To Create Comment"
+		result, err := json.Marshal(res)
+		if err != nil{
+			log.Println("Error Marshal ", err)
+		}
+		return string(result)
 	}
 
 	var thread = new(insert.ThreadCommentInsert)
 	thread.MasterThreadID = threadRequest.MasterThreadID
-	thread.Timestamp = threadRequest.Timestamp
-	thread.Description = threadRequest.Description
-	thread.Category = threadRequest.Category
-	thread.MakerUsername = threadRequest.MakerUsername
+	thread.ThreadComment = threadRequest.ThreadComment
+	thread.Username = threadRequest.MakerUsername
 
-	res, msg := thread_repository.CreateThreadComment(thread)
-
-	if res {
-		response.Response.Message = msg
-		response.Response.ResponseCode = "Create Thread Comment Success"
-	} else {
-		response.Response.Message = "Create Thread Comment failed, " + msg
-		response.Response.ResponseCode = "Create Thread Comment Failed"
+	threads, err := thread_repository.GetThread(thread.MasterThreadID)
+	if err != nil || threads == nil{
+		res.Response.Message = "Create Thread Comment failed, Master Thread Not Found"
+		res.Response.ResponseCode = "Create Thread Comment Failed"
+		log.Println("Master Thread Not Found ", err)
+		result, err := json.Marshal(res)
+		if err != nil{
+			log.Println("Error Marshal ", err)
+		}
+		return string(result)
 	}
 
-	result, _ := json.Marshal(response)
-	return string(result)
+	resp, msg := thread_repository.CreateThreadComment(thread)
+	if resp {
+		res.Response.Message = msg
+		res.Response.ResponseCode = "Create Thread Comment Success"
+	} else {
+		res.Response.Message = "Create Thread Comment failed, " + msg
+		res.Response.ResponseCode = "Create Thread Comment Failed"
+	}
 
+	result, err := json.Marshal(res)
+	if err != nil{
+		log.Println("Error Marshal ", err)
+	}
+	return string(result)
 }
