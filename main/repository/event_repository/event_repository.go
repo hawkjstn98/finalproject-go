@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"time"
 )
 
 var client = dbhealthcheck.Conf.MongoClient
@@ -89,49 +88,49 @@ func SearchEvent(page int, key string) (result []*event.GameEvent, count int64, 
 	return result, count, nil
 }
 
-func CreateEvent(insert event.EventInsert) bool {
+func CreateEvent(insert *event.EventInsert) (bool, error) {
 	var user user.User
 	filter := bson.M{"username": insert.MakerUsername}
 
-	err1 := userCollection.FindOne(context.TODO(), filter).Decode(&user)
-	if err1 != nil{
-		return false
+	err := userCollection.FindOne(context.TODO(), filter).Decode(&user)
+	if err != nil{
+		log.Println("User doesn't exist: ", err)
+		return false, err
 	}
 
 	insertRes, err := eventCollection.InsertOne(context.TODO(), insert)
-
 	if err != nil {
-		log.Println(err)
-		return false
+		log.Println("Unable to create comment: ", err)
+		return false, err
 	}
 
-	log.Println("event : ", insertRes)
+	log.Println("Create Event: ", insertRes)
 
-	var gameEvent event.GameEvent
-	gameEvent.MakerUsername = insert.MakerUsername
-	gameEvent.Distance = 0
-	gameEvent.Poster = insert.Poster
-	gameEvent.Longitude = insert.Longitude
-	gameEvent.Latitude = insert.Latitude
-	gameEvent.DateEnd = insert.DateEnd
-	gameEvent.DateStart = insert.DateStart
-	gameEvent.Description = insert.Description
-	gameEvent.Type = insert.Type
-	gameEvent.Games = insert.Games
-	gameEvent.Name = insert.Name
-	gameEvent.Timestamp = time.Now()
-	gameEvent.Site = insert.Site
-	gameEvent.Category = insert.Category
-	var x interface{} = insertRes.InsertedID
-	gameEvent.ID = x.(primitive.ObjectID)
-	user.EventList = append(user.EventList, gameEvent)
-	update := bson.M{"$set": bson.M{"eventList": user.EventList}}
-	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
-	if doc == nil {
-		log.Println("AddOrUpdate, Update Failed")
-		return false
-	}
-	return true
+	//var gameEvent event.GameEvent
+	//gameEvent.MakerUsername = insert.MakerUsername
+	//gameEvent.Distance = 0
+	//gameEvent.Poster = insert.Poster
+	//gameEvent.Longitude = insert.Longitude
+	//gameEvent.Latitude = insert.Latitude
+	//gameEvent.DateEnd = insert.DateEnd
+	//gameEvent.DateStart = insert.DateStart
+	//gameEvent.Description = insert.Description
+	//gameEvent.Type = insert.Type
+	//gameEvent.Games = insert.Games
+	//gameEvent.Name = insert.Name
+	//gameEvent.Timestamp = time.Now()
+	//gameEvent.Site = insert.Site
+	//gameEvent.Category = insert.Category
+	//var x interface{} = insertRes.InsertedID
+	//gameEvent.ID = x.(primitive.ObjectID)
+	//user.EventList = append(user.EventList, gameEvent)
+	//update := bson.M{"$set": bson.M{"eventList": user.EventList}}
+	//doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
+	//if doc == nil {
+	//	log.Println("AddOrUpdate, Update Failed")
+	//	return false
+	//}
+	return true, nil
 }
 
 func GetEvent(id string) (result []*event.GameEvent, err error) {

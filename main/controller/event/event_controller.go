@@ -31,6 +31,7 @@ func CreateEvent(c echo.Context) (err error) {
 	usrname := c.Param("username")
 
 	r := new(request.CreateEventRequest)
+	r.MakerUsername = usrname
 
 	if err = c.Bind(r); err != nil {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
@@ -52,7 +53,7 @@ func CreateEvent(c echo.Context) (err error) {
 	eventInsert.Longitude = r.Longitude
 	eventInsert.Poster = r.Poster
 
-	result := event_services.CreateEvent(eventInsert)
+	result := event_services.CreateEvent(&eventInsert)
 
 	return c.String(http.StatusOK, result)
 }
@@ -98,15 +99,15 @@ func MyEvent(c echo.Context) (err error) {
 func SearchEvent(c echo.Context) (err error) {
 	r := new(request.SearchEventRequest)
 
-	usrname   := c.Param("username")
-	search    := c.Param("searchKey")
-	page 	  := c.Param("page")
-	latitude  := c.Param("latitude")
+	usrname := c.Param("username")
+	search := c.Param("searchKey")
+	page := c.Param("page")
+	latitude := c.Param("latitude")
 	longitude := c.Param("longitude")
 
 	r.SearchKey = search
-	r.Username  = usrname
-	r.Page,err = strconv.Atoi(page)
+	r.Username = usrname
+	r.Page, err = strconv.Atoi(page)
 	r.Latitude = latitude
 	r.Longitude = longitude
 

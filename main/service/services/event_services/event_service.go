@@ -23,7 +23,7 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	if err != nil {
 		return
 	}
-	for i, gameEvent := range gameEvents{
+	for i, gameEvent := range gameEvents {
 		img, err := user_repository.GetUserImage(gameEvent.MakerUsername)
 		if err != nil {
 			log.Println(err)
@@ -59,7 +59,7 @@ func SearchEvent(req *request.SearchEventRequest) string {
 	if len(gameEvents) < 0 || gameEvents == nil {
 		return "No Event with this name available"
 	}
-	for i, gameEvent := range gameEvents{
+	for i, gameEvent := range gameEvents {
 		img, err := user_repository.GetUserImage(gameEvent.MakerUsername)
 		if err != nil {
 			log.Println(err)
@@ -83,12 +83,15 @@ func SearchEvent(req *request.SearchEventRequest) string {
 	return string(results)
 }
 
-func CreateEvent(req event.EventInsert) string {
+func CreateEvent(req *event.EventInsert) string {
 
 	ceResponse := new(response.CreateEventResponse)
 
-	res := event_repository.CreateEvent(req)
+	res, err := event_repository.CreateEvent(req)
+	if err != nil {
+		log.Println("Unable to Create Comment: ", err)
 
+	}
 	if res {
 		ceResponse.Response.ResponseCode = "SUCCESS"
 		ceResponse.Response.Message = "Success Creating Event"
@@ -97,7 +100,10 @@ func CreateEvent(req event.EventInsert) string {
 		ceResponse.Response.Message = "Failed Creating Event, Please Contact Our Customer Support : +62895348810240"
 	}
 
-	resp, _ := json.Marshal(ceResponse)
+	resp, err := json.Marshal(ceResponse)
+	if err != nil {
+		log.Println("Marshal Failed: ", err)
+	}
 	return string(resp)
 }
 
