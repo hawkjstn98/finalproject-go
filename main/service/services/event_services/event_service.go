@@ -5,14 +5,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/gcp_constant"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/bookmark"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/event"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/response"
+	"github.com/hawkjstn98/FinalProjectEnv/main/repository/bookmark_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/event_repository"
 	"github.com/hawkjstn98/FinalProjectEnv/main/repository/user_repository"
 	"googlemaps.github.io/maps"
 	"log"
 	"math"
+	"strconv"
 )
 
 func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
@@ -153,8 +156,8 @@ func MapToEventList(latitude string, longitude string, events []*event.GameEvent
 }
 
 func EventDetail(req *request.EventDetailRequest) (res string, err error) {
-	if req.EventId == "" {
-		return "", fmt.Errorf("invalid thread id")
+	if req.EventId == "" || req.UserId == "" {
+		return "", fmt.Errorf("invalid thread id or user id")
 	}
 	event, err := event_repository.GetEvent(req.EventId)
 	if err != nil {
@@ -166,6 +169,11 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 	resp.Event = events[0]
 	resp.Response.Message = "SUCCESS"
 	resp.Response.ResponseCode = "200"
+
+	var objBookmark bookmark.ObjectBookmark
+	objBookmark.EventID = req.EventId
+	objBookmark.UserID = req.UserId
+	events[0].BookmarkStatus = strconv.FormatBool(bookmark_repository.FindBookmark(&objBookmark))
 
 	if req.UserLatitude == "" || req.UserLongitude == "" {
 		resp.Distance = -1

@@ -55,6 +55,7 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 			EventId: *params[req[0]],
 			UserLatitude: *params[req[1]],
 			UserLongitude: *params[req[2]],
+			UserId: *params[req[3]],
 		}
 		return req
 	}
