@@ -201,10 +201,22 @@ func MyEventService(req *request.MyEventRequest) string {
 	resp.Response.ResponseCode = "SUCCESS FETCH MY EVENT"
 	resp.Response.Message = msg
 
+	if 0 == len(res) {
+		resp.Response.Message = "Empty Event"
+		responses, _ := json.Marshal(resp)
+		resp.EventList = nil
+		return string(responses)
+	}
+
 	var latitude []string
 	var longitude []string
 
 	for i := 0; i < len(res); i++ {
+		if res[i].Site == "Online" {
+			latitude = append(latitude, req.Latitude)
+			longitude = append(longitude, req.Longitude)
+			continue
+		}
 		latitude = append(latitude, res[i].Latitude)
 		longitude = append(longitude, res[i].Longitude)
 	}
