@@ -17,16 +17,12 @@ func MainRouter(e *echo.Echo) {
 	router.EventRouter(e)
 	router.BookmarkRouter(e)
 
-	address := os.Getenv("ADDRESS")
-	if address == "" {
-		address = "localhost"
-	}
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = ":1323"
+		port = "1323"
 	}
 
-	e.Logger.Fatal(e.Start(address + port))
+	e.Logger.Fatal(e.Start(":" + port))
 }
 
 // Handler
