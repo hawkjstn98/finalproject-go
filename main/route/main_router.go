@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	_ "github.com/swaggo/echo-swagger/example/docs"
 	"net/http"
+	"os"
 )
 
 func MainRouter(e *echo.Echo) {
@@ -16,8 +17,12 @@ func MainRouter(e *echo.Echo) {
 	router.EventRouter(e)
 	router.BookmarkRouter(e)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":1323"
+	}
 
+	e.Logger.Fatal(e.Start(port))
 }
 
 // Handler
