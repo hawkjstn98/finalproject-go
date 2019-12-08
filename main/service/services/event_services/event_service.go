@@ -32,6 +32,10 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 			log.Println(err)
 		}
 		gameEvents[i].MakerImage = img
+		var objBookmark bookmark.ObjectBookmark
+		objBookmark.EventID = gameEvent.ID.Hex()
+		objBookmark.UserID = req.UserId
+		gameEvent.BookmarkStatus = strconv.FormatBool(bookmark_repository.FindBookmark(&objBookmark))
 	}
 	page := float64(count / 10)
 	page = math.Floor(page)
