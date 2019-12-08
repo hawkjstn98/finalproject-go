@@ -1,6 +1,7 @@
 package route
 
 import (
+	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/route/router"
 	"github.com/labstack/echo/v4"
 	_ "github.com/swaggo/echo-swagger/example/docs"
@@ -17,8 +18,13 @@ func MainRouter(e *echo.Echo) {
 	router.EventRouter(e)
 	router.BookmarkRouter(e)
 
-	port := os.Getenv("PORT")
+	path, exists := os.LookupEnv("PORT")
 
+	if exists {
+		// Print the value of the environment variable
+		fmt.Print(path)
+	}
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = ":1323"
 	}
