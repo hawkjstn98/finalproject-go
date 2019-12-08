@@ -22,7 +22,7 @@ func MainRouter(e *echo.Echo) {
 		port = ":1323"
 	}
 
-	e.Logger.Fatal(e.Start("localhost:8089"))
+	e.Logger.Info(e.Start("localhost:8089"))
 }
 
 // Handler
