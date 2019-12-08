@@ -168,6 +168,10 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 		return
 	}
 
+	if event[0].Site == "Online" {
+		event[0].Latitude = req.UserLatitude
+		event[0].Longitude = req.UserLongitude
+	}
 	var resp response.EventDetailResponse
 	events := MapToEventList(req.UserLatitude, req.UserLongitude, event)
 	resp.Event = events[0]
@@ -195,6 +199,8 @@ func MyEventService(req *request.MyEventRequest) string {
 	resp := new(response.MyEventResponse)
 
 	res, msg, status := event_repository.MyEvent(req.Username)
+
+	fmt.Print("result : ", res)
 
 	if !status {
 		resp.Response.ResponseCode = "FAILED FETCH MY EVENT"

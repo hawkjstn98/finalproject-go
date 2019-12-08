@@ -4,19 +4,21 @@ import (
 	"context"
 	"fmt"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/bookmark"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/event"
 	"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/user"
+	"github.com/hawkjstn98/FinalProjectEnv/main/entity/request"
 	"github.com/hawkjstn98/FinalProjectEnv/main/helper/dbhealthcheck"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"time"
 )
 
 var client = dbhealthcheck.Conf.MongoClient
 var eventCollection = client.Database(mongo_constant.DBName).Collection(event.EventCollection)
 var userCollection = client.Database(mongo_constant.DBName).Collection(user.Collection)
+var bookmarkCollection = client.Database(mongo_constant.DBName).Collection(request.BookmarkCollection)
 
 func GetEventHome(page int) (result []*event.GameEvent, count int64, err error) {
 	limit := int64(page * 10)
@@ -90,7 +92,7 @@ func SearchEvent(page int, key string) (result []*event.GameEvent, count int64, 
 }
 
 func CreateEvent(insert event.EventInsert) bool {
-	var user user.User
+	var user user.UserWithId
 	filter := bson.M{"username": insert.MakerUsername}
 
 	err1 := userCollection.FindOne(context.TODO(), filter).Decode(&user)
@@ -107,28 +109,12 @@ func CreateEvent(insert event.EventInsert) bool {
 
 	log.Println("event : ", insertRes)
 
-	var gameEvent event.GameEvent
-	gameEvent.MakerUsername = insert.MakerUsername
-	gameEvent.Distance = 0
-	gameEvent.Poster = insert.Poster
-	gameEvent.Longitude = insert.Longitude
-	gameEvent.Latitude = insert.Latitude
-	gameEvent.DateEnd = insert.DateEnd
-	gameEvent.DateStart = insert.DateStart
-	gameEvent.Description = insert.Description
-	gameEvent.Type = insert.Type
-	gameEvent.Games = insert.Games
-	gameEvent.Name = insert.Name
-	gameEvent.Timestamp = time.Now()
-	gameEvent.Site = insert.Site
-	gameEvent.Category = insert.Category
-	var x interface{} = insertRes.InsertedID
-	gameEvent.ID = x.(primitive.ObjectID)
-	user.EventList = append(user.EventList, gameEvent)
-	update := bson.M{"$set": bson.M{"eventList": user.EventList}}
-	doc := userCollection.FindOneAndUpdate(context.TODO(), filter, update, nil)
-	if doc == nil {
-		log.Println("AddOrUpdate, Update Failed")
+	var bookmarkObject bookmark.ObjectBookmark
+	bookmarkObject.EventID = insertRes.InsertedID.(primitive.ObjectID).Hex()
+	bookmarkObject.UserID = user.Id.Hex()
+	_, err = bookmarkCollection.InsertOne(context.TODO(), bookmarkObject)
+	if err!= nil {
+		log.Println("Insert bookmark failed")
 		return false
 	}
 	return true
@@ -156,8 +142,8 @@ func GetEvent(id string) (result []*event.GameEvent, err error) {
 	return result, nil
 }
 
-func MyEvent(username string) (event []event.GameEvent, message string, status bool) {
-	var user user.User
+func MyEvent(username string) (events []*event.GameEvent, message string, status bool) {
+	var user user.UserWithId
 	filter := bson.M{"username": username}
 
 	err := userCollection.FindOne(context.TODO(), filter).Decode(&user)
@@ -167,5 +153,33 @@ func MyEvent(username string) (event []event.GameEvent, message string, status b
 		return nil, "User Not Found", false
 	}
 
-	return user.EventList, "Success Find user Event", true
+	id := user.Id.Hex()
+	filters := bson.M{"userId": id}
+	cursor, err := bookmarkCollection.Find(context.TODO(), filters)
+
+	var eventId []string
+	if cursor.Next(context.Background()) {
+		var bookmarks bookmark.ObjectBookmark
+		err := cursor.Decode(&bookmarks)
+		if err != nil {
+			eventId = nil
+			log.Println("Data Error", err)
+			return nil, "ERROR", false
+		}
+		eventId = append(eventId, (&bookmarks).EventID)
+	}
+	var eventList []*event.GameEvent
+	for i := 0; i < len(eventId); i++ {
+		var evnt event.GameEvent
+		eventid, _ := primitive.ObjectIDFromHex(eventId[i])
+		filterEvent := bson.M{"_id": eventid}
+		err := eventCollection.FindOne(context.TODO(), filterEvent).Decode(&evnt)
+		fmt.Println("Error: ", err)
+		if err!= nil {
+			log.Println("Insert bookmark failed")
+			return nil, "Data Error", false
+		}
+		eventList = append(eventList, &evnt)
+	}
+	return eventList, "Success Find user Event", true
 }
