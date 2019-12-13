@@ -47,6 +47,7 @@ func Map(params map[string]*string, req []string, reqType interface{}) interface
 			Page: page,
 			Latitude: *params[req[1]],
 			Longitude: *params[req[2]],
+			UserId: *params[req[3]],
 		}
 		return req
 	}

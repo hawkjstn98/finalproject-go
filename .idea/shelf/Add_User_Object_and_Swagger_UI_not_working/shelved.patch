@@ -1,0 +1,34 @@
+Index: main/route/router/forum_router.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package router\n\nimport (\n\tforumController \"github.com/hawkjstn98/FinalProjectEnv/main/controller/forum\"\n\t\"github.com/labstack/echo/v4\"\n)\n\nfunc ForumRouter(e *echo.Echo) {\n\te.GET(\"/getThreadPage\", forumController.GetThread)\n\te.GET(\"/getThreadDetail\", forumController.GetThreadDetail)\n\te.GET(\"/getThreadCategoryPage\", forumController.GetThreadCategory)\n\te.PUT(\"/createThread/:username\", forumController.CreateThread)\n\te.PUT(\"/createThread/:username\", forumController.CreateThreadComment)\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- main/route/router/forum_router.go	(revision 44b35dee16849d74a00133cc67a7007ae86d8114)
++++ main/route/router/forum_router.go	(date 1573998986651)
+@@ -10,5 +10,5 @@
+ 	e.GET("/getThreadDetail", forumController.GetThreadDetail)
+ 	e.GET("/getThreadCategoryPage", forumController.GetThreadCategory)
+ 	e.PUT("/createThread/:username", forumController.CreateThread)
+-	e.PUT("/createThread/:username", forumController.CreateThreadComment)
++	e.PUT("/createThreadComment/:username", forumController.CreateThreadComment)
+ }
+Index: main/repository/thread_repository/comment_repository.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package thread_repository\n\nimport (\n\t\"context\"\n\t\"github.com/hawkjstn98/FinalProjectEnv/main/entity/constant/mongo_constant\"\n\t\"github.com/hawkjstn98/FinalProjectEnv/main/entity/insert\"\n\t\"github.com/hawkjstn98/FinalProjectEnv/main/entity/object/forum\"\n\t\"go.mongodb.org/mongo-driver/bson\"\n\t\"go.mongodb.org/mongo-driver/mongo/options\"\n\t\"log\"\n)\n\nvar commentCollection = client.Database(mongo_constant.DBName).Collection(forum.CommentCollection)\n\nfunc GetCommentCount(id string) (int) {\n\tfilter := bson.M{\"masterThreadId\": id}\n\tcursor, err := commentCollection.CountDocuments(context.Background(), filter)\n\n\tif err != nil {\n\t\tlog.Println(\"Document Error: \", err)\n\t\treturn 0\n\t}\n\n\treturn int(cursor)\n}\n\nfunc GetCommentFromMasterID(id string, page int64) (result []*forum.ObjectComment, count int64, err error) {\n\tlimit := page * 10\n\tskip := (page - 1) * 10\n\toption := &options.FindOptions{\n\t\tSkip:  &skip,\n\t\tSort:  bson.D{{\"_id\", 1}},\n\t\tLimit: &limit,\n\t}\n\tcursor, err := commentCollection.Find(context.Background(), bson.D{{\"masterThreadId\", id}}, option)\n\tif err != nil {\n\t\tlog.Println(\"Document Error: \", err)\n\t\treturn\n\t}\n\tcount, err = commentCollection.CountDocuments(context.Background(), bson.D{{\"masterThreadId\", id}})\n\tif err != nil {\n\t\tlog.Println(\"Document Error: \", err)\n\t\treturn\n\t}\n\n\tfor cursor.Next(context.Background()) {\n\t\tvar comment forum.ObjectComment\n\t\terr := cursor.Decode(&comment)\n\t\tif err != nil {\n\t\t\tlog.Println(\"Data Error\", err)\n\t\t\treturn nil, 0, err\n\t\t}\n\t\tresult = append(result, &comment)\n\t}\n\n\treturn result, count, nil\n}\n\nfunc CreateThreadComment(request *insert.ThreadCommentInsert) (bool, string) {\n\n\tres, err := threadCollection.InsertOne(context.TODO(), request)\n\n\tif err != nil {\n\t\tlog.Println(err)\n\t\treturn false, \"Failed To Create Thread Comment to DB\"\n\t}\n\n\tlog.Println(res)\n\n\treturn true, \"Success creating Thread Comment\"\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- main/repository/thread_repository/comment_repository.go	(revision 44b35dee16849d74a00133cc67a7007ae86d8114)
++++ main/repository/thread_repository/comment_repository.go	(date 1574009298250)
+@@ -58,7 +58,7 @@
+ 
+ func CreateThreadComment(request *insert.ThreadCommentInsert) (bool, string) {
+ 
+-	res, err := threadCollection.InsertOne(context.TODO(), request)
++	res, err := commentCollection.InsertOne(context.TODO(), request)
+ 
+ 	if err != nil {
+ 		log.Println(err)

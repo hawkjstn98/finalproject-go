@@ -32,6 +32,10 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 			log.Println(err)
 		}
 		gameEvents[i].MakerImage = img
+		var objBookmark bookmark.ObjectBookmark
+		objBookmark.EventID = gameEvent.ID.Hex()
+		objBookmark.UserID = req.UserId
+		gameEvent.BookmarkStatus = strconv.FormatBool(bookmark_repository.FindBookmark(&objBookmark))
 	}
 	page := float64(count / 10)
 	page = math.Floor(page)
@@ -164,6 +168,10 @@ func EventDetail(req *request.EventDetailRequest) (res string, err error) {
 		return
 	}
 
+	if event[0].Site == "Online" {
+		event[0].Latitude = req.UserLatitude
+		event[0].Longitude = req.UserLongitude
+	}
 	var resp response.EventDetailResponse
 	events := MapToEventList(req.UserLatitude, req.UserLongitude, event)
 	resp.Event = events[0]
@@ -191,6 +199,8 @@ func MyEventService(req *request.MyEventRequest) string {
 	resp := new(response.MyEventResponse)
 
 	res, msg, status := event_repository.MyEvent(req.Username)
+
+	fmt.Print("result : ", res)
 
 	if !status {
 		resp.Response.ResponseCode = "FAILED FETCH MY EVENT"
