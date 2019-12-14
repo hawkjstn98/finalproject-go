@@ -38,6 +38,7 @@ func CreateEvent(c echo.Context) (err error) {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
 	}
 
+	log.Println("Request : ", r)
 	var eventInsert event.EventInsert
 
 	eventInsert.Timestamp = time.Now()
@@ -56,6 +57,7 @@ func CreateEvent(c echo.Context) (err error) {
 
 	result := event_services.CreateEvent(eventInsert)
 
+	log.Println("Create Event Result : ", result)
 	return c.String(http.StatusOK, result)
 }
 
