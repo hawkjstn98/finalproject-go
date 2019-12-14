@@ -7,6 +7,7 @@ import (
 	"github.com/hawkjstn98/FinalProjectEnv/main/service/services/event_services"
 	"github.com/hawkjstn98/FinalProjectEnv/main/utility"
 	"github.com/labstack/echo/v4"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -33,6 +34,7 @@ func CreateEvent(c echo.Context) (err error) {
 	r := new(request.CreateEventRequest)
 
 	if err = c.Bind(r); err != nil {
+		log.Println("Binding Error : ", err)
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
 	}
 
