@@ -82,14 +82,13 @@ func AddUpdateProfileImage(c echo.Context) (err error) {
 
 	usrname := c.Param("username")
 
-	if "" == usrname || ""== request.ImageInString{
-		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
-	}
-
 	if err = c.Bind(request); err != nil {
 		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
 	}
 
+	if "" == usrname || ""== request.ImageInString{
+		return c.String(http.StatusBadRequest, request_constant.BadRequestError)
+	}
 	request.Username = usrname
 
 	result := user_services.AddOrUpdateProfileImage(request)
