@@ -222,6 +222,7 @@ func MyEventService(req *request.MyEventRequest) string {
 	var longitude []string
 
 	for i := 0; i < len(res); i++ {
+		res[i].BookmarkStatus = "true"
 		if res[i].Site == "Online" {
 			latitude = append(latitude, req.Latitude)
 			longitude = append(longitude, req.Longitude)
