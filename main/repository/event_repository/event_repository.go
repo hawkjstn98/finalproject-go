@@ -158,7 +158,7 @@ func MyEvent(username string) (events []*event.GameEvent, message string, status
 	cursor, err := bookmarkCollection.Find(context.TODO(), filters)
 
 	var eventId []string
-	if cursor.Next(context.Background()) {
+	for cursor.Next(context.Background()) {
 		var bookmarks bookmark.ObjectBookmark
 		err := cursor.Decode(&bookmarks)
 		if err != nil {
@@ -168,6 +168,7 @@ func MyEvent(username string) (events []*event.GameEvent, message string, status
 		}
 		eventId = append(eventId, (&bookmarks).EventID)
 	}
+
 	var eventList []*event.GameEvent
 	for i := 0; i < len(eventId); i++ {
 		var evnt event.GameEvent
