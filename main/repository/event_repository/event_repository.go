@@ -61,7 +61,7 @@ func SearchEvent(page int, key string) (result []*event.GameEvent, count int64, 
 		Limit: &limit,
 	}
 
-	filter := bson.M{"name": primitive.Regex{Pattern: "^"+key, Options: "i"}}
+	filter := bson.M{"name": primitive.Regex{Pattern: "("+key+")", Options: "i"}}
 
 	cursor, err := eventCollection.Find(context.TODO(), filter, option)
 
