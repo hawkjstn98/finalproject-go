@@ -15,6 +15,7 @@ import (
 	"googlemaps.github.io/maps"
 	"log"
 	"math"
+	"sort"
 	"strconv"
 )
 
@@ -237,6 +238,10 @@ func MyEventService(req *request.MyEventRequest) string {
 	for i := 0; i < len(dist); i++ {
 		res[i].Distance = dist[i]
 	}
+	sort.Slice(res, func(i, j int) bool{
+		return res[i].DateStart.Before(res[j].DateStart)
+	})
+
 	resp.EventList = res
 
 	responses, _ := json.Marshal(resp)

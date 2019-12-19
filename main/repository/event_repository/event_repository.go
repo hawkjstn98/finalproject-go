@@ -25,7 +25,7 @@ func GetEventHome(page int) (result []*event.GameEvent, count int64, err error) 
 	skip := int64((page - 1) * 10)
 	option := &options.FindOptions{
 		Skip:  &skip,
-		Sort:  bson.D{{"_id", 1}},
+		Sort:  bson.D{{"dateStart", -1}},
 		Limit: &limit,
 	}
 	cursor, err := eventCollection.Find(context.TODO(), bson.D{{}}, option)
