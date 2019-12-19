@@ -15,7 +15,7 @@ This is a university project for the Mobile Cross Platform course in Multimedia 
 3. Enter `go run main/main.go` to run the program
 4. Hit `localhost:1323` or other port according to your ***environtment*** with [Postman](https://www.getpostman.com/)
 
-## Steps to make a rest-api, like this repository and the deployment process
+## Steps to make a rest-api, like this repository, and the deployment process
 ***ATTENTION, THIS STEPS MEANT TO BE USED TO MAKE A NEW PROJECT AND NOT HOW TO USE AND DEPLOY THIS REPOSITORY TO YOUR OWN HEROKU AND MONGODB SERVER***
 + If Visual Studio is the IDE choosen for this project then you might want to read [this](https://rominirani.com/setup-go-development-environment-with-visual-studio-code-7ea5d643a51a)
 1. Make a new repository in a new folder using `git init PROJECT-NAME` and push the repository to your github
