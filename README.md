@@ -18,7 +18,7 @@ This is a university project for the Mobile Cross Platform course in Multimedia 
 ## Steps to reproduce this repository and deployment
 + If Visual Studio is the IDE choosen for this project then you might want to read [this](https://rominirani.com/setup-go-development-environment-with-visual-studio-code-7ea5d643a51a)
 1. Make a new repository in a new folder using `git init PROJECT-NAME` and push the repository to your github
-2. Run `go mod init github.com/USERNAME/YOUR-REPO.git` to initiate go mod that used by golang to track depedency (necessary for deployment)
+2. Run `go mod init github.com/USERNAME/YOUR-REPO` to initiate go mod that used by golang to track depedency (necessary for deployment)
 3. Run `go mod tidy` to tidy up the repository, it will pull all necessary depedency automatically (in theory)
 4. Then make a file named `main.go` with a package named `main`
 5. Get echo using `go get -u github.com/labstack/echo/...` to get the repo that we need to make a RESTFUL-API (docs can be found [here](https://echo.labstack.com/guide))
