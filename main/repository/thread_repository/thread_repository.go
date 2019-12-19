@@ -26,7 +26,7 @@ func GetThreadPage(page int) (result []*forum.Thread, err error) {
 	}
 	option := &options.FindOptions{
 		Skip:  &skip,
-		Sort:  bson.D{{"_id", 1}},
+		Sort:  bson.D{{"timestamp", -1}},
 		Limit: &limit,
 	}
 	cursor, err := threadCollection.Find(context.Background(), bson.D{{}}, option)
@@ -63,7 +63,7 @@ func GetSearchPage(page int, searchKey string) (result []*forum.Thread, err erro
 		Limit: &limit,
 	}
 
-	filter := bson.M{"name": primitive.Regex{Pattern: "^"+searchKey, Options: "i"}}
+	filter := bson.M{"name": primitive.Regex{Pattern: "("+searchKey+")", Options: "i"}}
 
 	cursor, err := threadCollection.Find(context.Background(), filter, option)
 	if err != nil {
@@ -96,7 +96,7 @@ func GetThreadCategory(category *request.ThreadCategoryRequest) (result []*forum
 
 	option := &options.FindOptions{
 		Skip:  &skip,
-		Sort:  bson.D{{"_id", 1}},
+		Sort:  bson.D{{"timestamp", -1}},
 		Limit: &limit,
 	}
 	cursor, err := threadCollection.Find(context.TODO(), filter, option)
