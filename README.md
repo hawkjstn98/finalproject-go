@@ -28,8 +28,8 @@ This is a university project for the Mobile Cross Platform course in Multimedia 
 8. Make sure all the commits have been pushed to master branch in github, then run `git push heroku master` (this will push the master branch from github to heroku and automatically deployed)
 9. Run `heroku logs --tail` (preferably in a new terminal or terminal tab) to monitor the ongoing deployment process by heroku and to monitor other logs that have been made by you
 10. Log in to [MongoDB Cloud](https://cloud.mongodb.com/) and create a new cluster
-11. Go to Collections tab and ***create*** a new database on the newly created cluster with database named according to your code or reversed (referenced to step 6)
-12. Create new colections with names that you want to have as if it was a mysql table by clicking on the database and pressed the green create button
+11. Go to Collections tab and ***create*** a new database on the newly created cluster with database named according to your code or reversed (referenced to step 6, best practice on this is to put the database name in an ENV or a constant variable)
+12. Create new colections with names that you want to have as if it was a mysql table by clicking on the database and pressed the green create button (Optional mongo can create the collection itself by adding the data via code)
 13. Setup the `Database Access` for database user and `Network Access` to whitelist certain IP for connections
 ...The links should be something like `cloud.mongodb.com/v2/...#security/database/users` and `cloud.mongodb.com/v2/...#security/network/whitelist`
-14. Connect the newly hosted MongoDB by choosing to "Connect to you app" option in MongoDB Cloud then copy the provided string to your codes (docs on how to connect using go can be found [here](https://docs.atlas.mongodb.com/driver-connection/))
+14. Connect the newly hosted MongoDB by choosing to "Connect to you app" option in MongoDB Cloud then copy the provided string to your codes (docs on how to connect using go can be found [here](https://docs.atlas.mongodb.com/driver-connection/), and once again the best practice is to put the string on an ENV or a constant variable)
