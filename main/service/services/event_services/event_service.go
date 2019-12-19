@@ -46,6 +46,10 @@ func GetEventHome(req *request.EventHomeRequest) (res string, err error) {
 	}
 	var resp response.EventHomeResponse
 	eventList := MapToEventList(req.Latitude, req.Longitude, gameEvents)
+	sort.Slice(eventList, func(i, j int) bool{
+		return eventList[i].Distance < eventList[j].Distance
+	})
+
 	resp.EventList = eventList
 	resp.MaxPage = maxPage
 	resp.Response.Message = "SUCCESS"
