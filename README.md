@@ -28,7 +28,7 @@ This is a university project for the Mobile Cross Platform course in Multimedia 
 8. Make sure all the commits have been pushed to master branch in github, then run `git push heroku master` (this will push the master branch from github to heroku and automatically deployed)
 9. Run `heroku logs --tail` (preferably in a new terminal or terminal tab) to monitor the ongoing deployment process by heroku and to monitor other logs that have been made by you
 10. Log in to [MongoDB Cloud](https://cloud.mongodb.com/) and create a new cluster
-11. Go to Collections tab and ***create*** a new database on the newly created cluster
+11. Go to Collections tab and ***create*** a new database on the newly created cluster with database named according to your code or reversed (refereced to step 6)
 12. Create new colections with names that you want to have as if it was a mysql table by clicking on the database and pressed the green create button
 13. Setup the `Database Access` for database user and `Network Access` to whitelist certain IP for connections
 ...The links should be something like `cloud.mongodb.com/v2/...#security/database/users` and `cloud.mongodb.com/v2/...#security/network/whitelist`
