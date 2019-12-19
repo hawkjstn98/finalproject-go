@@ -15,7 +15,7 @@ This is a university project for the Mobile Cross Platform course in Multimedia 
 3. Enter `go run main/main.go` to run the program
 4. Hit `localhost:1323` or other port according to your ***environtment*** with [Postman](https://www.getpostman.com/)
 
-## Steps to reproduce this repository and deployment
+## Steps to make a rest-api, like this repository and the deployment process
 + If Visual Studio is the IDE choosen for this project then you might want to read [this](https://rominirani.com/setup-go-development-environment-with-visual-studio-code-7ea5d643a51a)
 1. Make a new repository in a new folder using `git init PROJECT-NAME` and push the repository to your github
 2. Run `go mod init github.com/USERNAME/YOUR-REPO` to initiate go mod that used by golang to track depedency (necessary for deployment)
