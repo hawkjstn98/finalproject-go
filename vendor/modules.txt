@@ -2,8 +2,6 @@
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
-# github.com/dgrijalva/jwt-go v3.2.0+incompatible
-github.com/dgrijalva/jwt-go
 # github.com/go-openapi/jsonpointer v0.18.0
 github.com/go-openapi/jsonpointer
 # github.com/go-openapi/jsonreference v0.18.0
@@ -14,14 +12,16 @@ github.com/go-openapi/spec
 github.com/go-openapi/swag
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
+# github.com/golang-jwt/jwt v3.2.2+incompatible
+github.com/golang-jwt/jwt
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
 # github.com/google/uuid v1.1.1
 github.com/google/uuid
-# github.com/labstack/echo/v4 v4.1.11
+# github.com/labstack/echo/v4 v4.9.0
 github.com/labstack/echo/v4
 github.com/labstack/echo/v4/middleware
-# github.com/labstack/gommon v0.3.0
+# github.com/labstack/gommon v0.3.1
 github.com/labstack/gommon/bytes
 github.com/labstack/gommon/color
 github.com/labstack/gommon/log
@@ -30,9 +30,9 @@ github.com/labstack/gommon/random
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
-# github.com/mattn/go-colorable v0.1.2
+# github.com/mattn/go-colorable v0.1.11
 github.com/mattn/go-colorable
-# github.com/mattn/go-isatty v0.0.9
+# github.com/mattn/go-isatty v0.0.14
 github.com/mattn/go-isatty
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
@@ -42,7 +42,7 @@ github.com/swaggo/echo-swagger/example/docs
 github.com/swaggo/swag
 # github.com/valyala/bytebufferpool v1.0.0
 github.com/valyala/bytebufferpool
-# github.com/valyala/fasttemplate v1.0.1
+# github.com/valyala/fasttemplate v1.2.1
 github.com/valyala/fasttemplate
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
 github.com/xdg/scram
@@ -77,23 +77,28 @@ go.mongodb.org/mongo-driver/x/mongo/driver/session
 go.mongodb.org/mongo-driver/x/mongo/driver/topology
 go.mongodb.org/mongo-driver/x/mongo/driver/uuid
 go.mongodb.org/mongo-driver/x/mongo/driver/wiremessage
-# golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
+# golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 golang.org/x/crypto/acme
 golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/pbkdf2
-# golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
+# golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f
+golang.org/x/net/http/httpguts
+golang.org/x/net/http2
+golang.org/x/net/http2/h2c
+golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 # golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a
+# golang.org/x/sys v0.0.0-20211103235746-7861aae1554b
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.0
+# golang.org/x/text v0.3.7
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/time v0.0.0-20191024005414-555d28b269f0
+# golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
 golang.org/x/time/rate
 # golang.org/x/tools v0.0.0-20190205050122-7f7074d5bcfd
 golang.org/x/tools/go/ast/astutil
