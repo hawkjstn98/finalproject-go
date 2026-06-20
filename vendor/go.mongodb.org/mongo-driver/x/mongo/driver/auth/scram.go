@@ -14,21 +14,34 @@ package auth
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 
-	"github.com/xdg/scram"
-	"github.com/xdg/stringprep"
+	"github.com/xdg-go/scram"
+	"github.com/xdg-go/stringprep"
+	"go.mongodb.org/mongo-driver/x/bsonx/bsoncore"
 	"go.mongodb.org/mongo-driver/x/mongo/driver"
-	"go.mongodb.org/mongo-driver/x/mongo/driver/description"
 )
 
-// SCRAMSHA1 holds the mechanism name "SCRAM-SHA-1"
-const SCRAMSHA1 = "SCRAM-SHA-1"
+const (
+	// SCRAMSHA1 holds the mechanism name "SCRAM-SHA-1"
+	SCRAMSHA1 = "SCRAM-SHA-1"
 
-// SCRAMSHA256 holds the mechanism name "SCRAM-SHA-256"
-const SCRAMSHA256 = "SCRAM-SHA-256"
+	// SCRAMSHA256 holds the mechanism name "SCRAM-SHA-256"
+	SCRAMSHA256 = "SCRAM-SHA-256"
+)
 
-func newScramSHA1Authenticator(cred *Cred) (Authenticator, error) {
+var (
+	// Additional options for the saslStart command to enable a shorter SCRAM conversation
+	scramStartOptions bsoncore.Document = bsoncore.BuildDocumentFromElements(nil,
+		bsoncore.AppendBooleanElement(nil, "skipEmptyExchange", true),
+	)
+)
+
+func newScramSHA1Authenticator(cred *Cred, _ *http.Client) (Authenticator, error) {
+	source := cred.Source
+	if source == "" {
+		source = "admin"
+	}
 	passdigest := mongoPasswordDigest(cred.Username, cred.Password)
 	client, err := scram.SHA1.NewClientUnprepped(cred.Username, passdigest, "")
 	if err != nil {
@@ -37,15 +50,19 @@ func newScramSHA1Authenticator(cred *Cred) (Authenticator, error) {
 	client.WithMinIterations(4096)
 	return &ScramAuthenticator{
 		mechanism: SCRAMSHA1,
-		source:    cred.Source,
+		source:    source,
 		client:    client,
 	}, nil
 }
 
-func newScramSHA256Authenticator(cred *Cred) (Authenticator, error) {
+func newScramSHA256Authenticator(cred *Cred, _ *http.Client) (Authenticator, error) {
+	source := cred.Source
+	if source == "" {
+		source = "admin"
+	}
 	passprep, err := stringprep.SASLprep.Prepare(cred.Password)
 	if err != nil {
-		return nil, newAuthError(fmt.Sprintf("error SASLprepping password '%s'", cred.Password), err)
+		return nil, newAuthError("error SASLprepping password", err)
 	}
 	client, err := scram.SHA256.NewClientUnprepped(cred.Username, passprep, "")
 	if err != nil {
@@ -54,7 +71,7 @@ func newScramSHA256Authenticator(cred *Cred) (Authenticator, error) {
 	client.WithMinIterations(4096)
 	return &ScramAuthenticator{
 		mechanism: SCRAMSHA256,
-		source:    cred.Source,
+		source:    source,
 		client:    client,
 	}, nil
 }
@@ -66,20 +83,41 @@ type ScramAuthenticator struct {
 	client    *scram.Client
 }
 
-// Auth authenticates the connection.
-func (a *ScramAuthenticator) Auth(ctx context.Context, _ description.Server, conn driver.Connection) error {
-	adapter := &scramSaslAdapter{conversation: a.client.NewConversation(), mechanism: a.mechanism}
-	err := ConductSaslConversation(ctx, conn, a.source, adapter)
+var _ SpeculativeAuthenticator = (*ScramAuthenticator)(nil)
+
+// Auth authenticates the provided connection by conducting a full SASL conversation.
+func (a *ScramAuthenticator) Auth(ctx context.Context, cfg *Config) error {
+	err := ConductSaslConversation(ctx, cfg, a.source, a.createSaslClient())
 	if err != nil {
 		return newAuthError("sasl conversation error", err)
 	}
 	return nil
 }
 
+// Reauth reauthenticates the connection.
+func (a *ScramAuthenticator) Reauth(_ context.Context, _ *driver.AuthConfig) error {
+	return newAuthError("SCRAM does not support reauthentication", nil)
+}
+
+// CreateSpeculativeConversation creates a speculative conversation for SCRAM authentication.
+func (a *ScramAuthenticator) CreateSpeculativeConversation() (SpeculativeConversation, error) {
+	return newSaslConversation(a.createSaslClient(), a.source, true), nil
+}
+
+func (a *ScramAuthenticator) createSaslClient() SaslClient {
+	return &scramSaslAdapter{
+		conversation: a.client.NewConversation(),
+		mechanism:    a.mechanism,
+	}
+}
+
 type scramSaslAdapter struct {
 	mechanism    string
 	conversation *scram.ClientConversation
 }
+
+var _ SaslClient = (*scramSaslAdapter)(nil)
+var _ ExtraOptionsSaslClient = (*scramSaslAdapter)(nil)
 
 func (a *scramSaslAdapter) Start() (string, []byte, error) {
 	step, err := a.conversation.Step("")
@@ -89,7 +127,7 @@ func (a *scramSaslAdapter) Start() (string, []byte, error) {
 	return a.mechanism, []byte(step), nil
 }
 
-func (a *scramSaslAdapter) Next(challenge []byte) ([]byte, error) {
+func (a *scramSaslAdapter) Next(_ context.Context, challenge []byte) ([]byte, error) {
 	step, err := a.conversation.Step(string(challenge))
 	if err != nil {
 		return nil, err
@@ -99,4 +137,8 @@ func (a *scramSaslAdapter) Next(challenge []byte) ([]byte, error) {
 
 func (a *scramSaslAdapter) Completed() bool {
 	return a.conversation.Done()
+}
+
+func (*scramSaslAdapter) StartCommandOptions() bsoncore.Document {
+	return scramStartOptions
 }

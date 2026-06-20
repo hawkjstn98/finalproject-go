@@ -6,25 +6,32 @@
 
 package options
 
-import "go.mongodb.org/mongo-driver/mongo/readpref"
+import (
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+)
 
-// RunCmdOptions represents all possible options for a runCommand operation.
+// RunCmdOptions represents options that can be used to configure a RunCommand operation.
 type RunCmdOptions struct {
-	ReadPreference *readpref.ReadPref // The read preference for the operation.
+	// The read preference to use for the operation. The default value is nil, which means that the primary read
+	// preference will be used.
+	ReadPreference *readpref.ReadPref
 }
 
-// RunCmd creates a new *RunCmdOptions
+// RunCmd creates a new RunCmdOptions instance.
 func RunCmd() *RunCmdOptions {
 	return &RunCmdOptions{}
 }
 
-// SetReadPreference sets the read preference for the operation.
+// SetReadPreference sets value for the ReadPreference field.
 func (rc *RunCmdOptions) SetReadPreference(rp *readpref.ReadPref) *RunCmdOptions {
 	rc.ReadPreference = rp
 	return rc
 }
 
-// MergeRunCmdOptions combines the given *RunCmdOptions into one *RunCmdOptions in a last one wins fashion.
+// MergeRunCmdOptions combines the given RunCmdOptions instances into one *RunCmdOptions in a last-one-wins fashion.
+//
+// Deprecated: Merging options structs will not be supported in Go Driver 2.0. Users should create a
+// single options struct instead.
 func MergeRunCmdOptions(opts ...*RunCmdOptions) *RunCmdOptions {
 	rc := RunCmd()
 	for _, opt := range opts {
